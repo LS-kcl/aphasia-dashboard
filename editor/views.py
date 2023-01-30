@@ -5,9 +5,7 @@ def home(request):
     return render(request, 'home.html')
 
 def create(request):
-    response = HttpResponse("Create new pages here")
-    return response
+    return render(request, 'create.html')
 
 def browse(request):
-    response = HttpResponse("Browse created pages here")
-    return response
+    return render(request, 'browse.html')
