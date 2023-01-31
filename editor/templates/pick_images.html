@@ -1,0 +1,15 @@
+
+<html>
+	<head>
+		<title> Pick Images </title>
+	</head>
+	<body>
+		<h1> Pick Images </h1>
+        <p> Please select an image for each sentence: </p>
+		{% for sentence in sentences %}
+			<p>{{sentence.text}}</p>
+		{% endfor %}
+
+		<p><a href='{%url 'home' %}'>Back to home</a></p>
+	</body>
+</html>
