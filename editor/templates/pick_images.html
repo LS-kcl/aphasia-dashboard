@@ -7,7 +7,7 @@
 		<h1> Pick Images </h1>
         <p> Please select an image for each sentence: </p>
 
-		<form action="{% url 'view_page' %}" method="post">
+		<form action="{% url 'pick_images' set.id %}" method="post">
 				{% csrf_token %}
 				{% for form in sentence_forms %}
 					{{ form.as_p }}

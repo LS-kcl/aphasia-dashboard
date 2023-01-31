@@ -25,7 +25,7 @@ def create(request):
                 ## Create sentence
                 Sentence.objects.create(parent_set=set,text=sentence)
                 ## Add to set
-            return redirect('pick_images/' + str(set.id))
+            return redirect('pick_images', id=set.id)
         messages.add_message(request, messages.ERROR, "Please enter a valid paragraph")
 
 
@@ -34,16 +34,17 @@ def create(request):
     return render(request, 'create.html', {'form':form})
 
 def pick_images(request, id):
+    if request.method == 'POST':
+        return redirect('browse')
+
     set = Set.objects.get(pk=id)
     sentences_queryset = Sentence.objects.filter(parent_set=id).values()
     sentences = [sentence for sentence in sentences_queryset]
     # For each sentence, create a bound form to return:
     sentence_forms = [SentenceForm({'text':sentence['text']}) for sentence in sentences]
-    return render(request, 'pick_images.html', {'sentences':sentences, 'sentence_forms':sentence_forms})
+    return render(request, 'pick_images.html', {'sentences':sentences, 'sentence_forms':sentence_forms, 'set':set})
 
-def view_page(request):
-    if request.method == 'POST':
-        return redirect('home')
+def view_page(request, id):
     return render(request, 'view_page.html')
 
 def browse(request):
