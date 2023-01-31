@@ -22,5 +22,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('create/', views.create, name='create'),
     path('create/pick_images/<int:id>', views.pick_images, name='pick_images'),
+    path('create/view_page/', views.view_page, name='view_page'),
     path('browse/', views.browse, name='browse'),
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import ParagraphForm
+from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set
 
 def home(request):
@@ -37,7 +37,14 @@ def pick_images(request, id):
     set = Set.objects.get(pk=id)
     sentences_queryset = Sentence.objects.filter(parent_set=id).values()
     sentences = [sentence for sentence in sentences_queryset]
-    return render(request, 'pick_images.html', {'sentences':sentences})
+    # For each sentence, create a bound form to return:
+    sentence_forms = [SentenceForm({'text':sentence['text']}) for sentence in sentences]
+    return render(request, 'pick_images.html', {'sentences':sentences, 'sentence_forms':sentence_forms})
+
+def view_page(request):
+    if request.method == 'POST':
+        return redirect('home')
+    return render(request, 'view_page.html')
 
 def browse(request):
     return render(request, 'browse.html')
