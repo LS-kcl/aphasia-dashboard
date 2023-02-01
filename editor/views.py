@@ -54,9 +54,10 @@ def pick_images(request, id):
         if all(is_valid):
             print("Forms are all valid")
             # If all forms are valid, create objects, and redirect to new page
-            for text in forms_submissions:
-                new_sentence = Sentence(text=text, parent_set=current_set)
-                new_sentence.save()
+            ### Commented out to prevent duplication glitch, look into making this edit the already existing sentences, or clearing first ###
+            # for text in forms_submissions:
+            #     new_sentence = Sentence(text=text, parent_set=current_set)
+            #     new_sentence.save()
                 
             return redirect('view_page', id=id)
         
@@ -72,7 +73,11 @@ def pick_images(request, id):
     return render(request, 'pick_images.html', {'sentences':sentences, 'sentence_forms':sentence_forms, 'set':set})
 
 def view_page(request, id):
-    return render(request, 'view_page.html')
+    set = Set.objects.get(pk=id)
+    # Get all sentences in the sets:
+    sentences = set.sentence_set.all()
+    print(sentences)
+    return render(request, 'view_page.html', {'sentences':sentences})
 
 def browse(request):
     return render(request, 'browse.html')

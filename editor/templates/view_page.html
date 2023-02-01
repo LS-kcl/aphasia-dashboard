@@ -4,7 +4,9 @@
 	</head>
 	<body>
 		<h1> View Page </h1>
-        <p> Placeholder content </p>
+		{% for sentence in sentences %}
+		<p> {{ sentence.text }} </p>
+		{% endfor %}
 		<p><a href='{%url 'home' %}'>Back to home</a></p>
 	</body>
 </html>
