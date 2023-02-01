@@ -53,9 +53,11 @@ def pick_images(request, id):
         print(is_valid)
         if all(is_valid):
             print("Forms are all valid")
-            # If all forms are valid, save all forms, and redirect to new page
-            for form in forms:
-                form.save()
+            # If all forms are valid, create objects, and redirect to new page
+            for text in forms_submissions:
+                new_sentence = Sentence(text=text, parent_set=current_set)
+                new_sentence.save()
+                
             return redirect('view_page', id=id)
         
         # If not valid, return error messages
