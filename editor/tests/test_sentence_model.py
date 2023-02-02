@@ -2,7 +2,6 @@ from django.test import TestCase
 from editor.models import Set, Sentence
 from django.core.exceptions import ValidationError
 
-# Create your tests here.
 class SentenceModelTestCase(TestCase):
     """Unit tests for the Sentence model"""
     def test_valid_sentence(self):

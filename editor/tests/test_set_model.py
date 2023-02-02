@@ -2,7 +2,6 @@ from django.test import TestCase
 from editor.models import Set
 from django.core.exceptions import ValidationError
 
-# Create your tests here.
 class SetModelTestCase(TestCase):
     """Unit tests for the Set model"""
     def test_valid_set(self):
