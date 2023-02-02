@@ -80,4 +80,5 @@ def view_page(request, id):
     return render(request, 'view_page.html', {'sentences':sentences})
 
 def browse(request):
-    return render(request, 'browse.html')
+    sets = Set.objects.all()
+    return render(request, 'browse.html', {'sets':sets})
