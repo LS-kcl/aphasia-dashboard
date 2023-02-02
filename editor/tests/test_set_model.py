@@ -8,6 +8,18 @@ class SetModelTestCase(TestCase):
     def test_valid_set(self):
         self._assert_set_is_valid()
 
+    def test_title_cannot_not_exceed_255_characters(self):
+        self.set.title = 'x' * 256
+        self._assert_set_is_invalid()
+
+    def test_title_can_be_255_characters(self):
+        self.set.title = 'x' * 255
+        self._assert_set_is_valid()
+
+    def test_title_cannot_not_be_blank(self):
+        self.set.title = ""
+        self._assert_set_is_invalid()
+
     """Auxillary methods"""
     def setUp(self):
         self.set = Set.objects.create(title="Sample text")
