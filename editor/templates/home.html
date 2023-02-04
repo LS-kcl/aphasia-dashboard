@@ -1,6 +1,16 @@
 {% extends 'partials/base.html' %}
 {% block body %}
-	<h1> Dashboard </h1>
-	<p><a href='{%url 'create' %}'>Create Content</a></p>
-	<p><a href='{%url 'browse' %}'>Browse Content</a></p>
+	<div class="container">
+		<div class="card">
+			<div class="row align-items-start">
+				<h1> Dashboard </h1>
+				<div class="col-2">
+					<p><a href='{%url 'create' %}' class="btn btn-secondary">Create Content</a></p>
+				</div>
+				<div class="col-2">
+					<p><a href='{%url 'browse' %}' class="btn btn-secondary">Browse Content</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
