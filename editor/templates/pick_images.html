@@ -1,13 +1,17 @@
 {% extends 'partials/base.html' %}
 {% block body %}
+<div class="container">
 	<h1> Pick Images </h1>
 	<p> Please select an image for each sentence: </p>
 
 	<form action="{% url 'pick_images' set.id %}" method="post">
 			{% csrf_token %}
+			<ol>
 			{% for form in sentence_forms %}
-				{{ form.as_p }}
+				<li>{{ form.as_p }}</li>
 			{% endfor %}
-			<input type="submit" value="Submit">
-	<p><a href='{%url 'home' %}'>Back to home</a></p>
+			</ol>
+			<input type="submit" class="btn btn-secondary" value="Submit">
+	<p><a href='{%url 'home' %}' class="btn btn-secondary">Back to home</a></p>
+</div>
 {% endblock %}

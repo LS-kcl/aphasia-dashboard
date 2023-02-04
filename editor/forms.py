@@ -12,9 +12,17 @@ class ParagraphForm(forms.ModelForm):
         # Show this paragraph as a text area:
         widgets = {'text':forms.Textarea()}
 
+        # Return an empty label, as we do not want to render
+        # the text description
+        labels = {'text':''}
+
 
 class SentenceForm(forms.ModelForm):
     # Metadata
     class Meta:
         model = Sentence
         fields = ['text']
+
+        # Return an empty label, as we do not want to render
+        # the text description
+        labels = {'text':''}
