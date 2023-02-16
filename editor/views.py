@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set
+from gTTS.templatetags.gTTS import say
 
 def home(request):
     return render(request, 'home.html')
@@ -70,6 +71,7 @@ def pick_images(request, id):
     sentences = [sentence for sentence in sentences_queryset]
     # For each sentence, create a bound form to return:
     sentence_forms = [SentenceForm({'text':sentence['text']}) for sentence in sentences]
+
     return render(request, 'pick_images.html', {'sentences':sentences, 'sentence_forms':sentence_forms, 'set':set})
 
 def view_page(request, id):
@@ -77,7 +79,19 @@ def view_page(request, id):
     # Get all sentences in the sets:
     sentences = set.sentence_set.all()
     print(sentences)
-    return render(request, 'view_page.html', {'sentences':sentences})
+
+    ### For integration testing ONLY, refactor into the sentence model ASAP ###
+
+    sentence_text = []
+    for sentence in sentences:
+        sentence_text.append(sentence.text)
+
+    print(sentence_text)
+    # For each sentence, create an audio clip
+    audio_clips = [say(language='en-uk', text=text) for text in sentence_text]
+    ###
+
+    return render(request, 'view_page.html', {'sentences':sentences, 'audio_clips':audio_clips})
 
 def browse(request):
     sets = Set.objects.all()

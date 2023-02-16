@@ -1,5 +1,6 @@
 {% extends 'partials/base.html' %}
 {% block body %}
+{% load gTTS %}
 <div class="container">
 	<h1> View Page </h1>
 	<div class="row justify-content-center">
@@ -11,6 +12,10 @@
 				<div class="text-center">
 					<div class="col">
 						<p> {{ sentence.text }} </p>
+						<audio
+							src="{% say 'en-us' sentence.text %}"
+							controls
+						></audio>
 					</div>
 				</div>
 			</div>
