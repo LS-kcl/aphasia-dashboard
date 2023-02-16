@@ -25,4 +25,6 @@ class Sentence(Model):
         max_length=520,
     )
 
-    # Accompanying image in some form here
+    # Accompanying image as a URL 
+    # NOTE: This many cause issues with links not starting with http
+    image_url = models.URLField(max_length=200, blank=True, default='https://picsum.photos/id/237/200/300')
