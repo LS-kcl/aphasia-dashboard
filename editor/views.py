@@ -4,6 +4,9 @@ from django.contrib import messages
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set
 from gTTS.templatetags.gTTS import say
+# import requests
+import random
+
 
 def home(request):
     return render(request, 'home.html')
@@ -61,7 +64,8 @@ def pick_images(request, id):
             # NOTE: If taking this approach, and simply creating new objects from form input, consider
             #       refactoring from a model form to a regular form
             for text in forms_submissions:
-                new_sentence = Sentence(text=text, parent_set=current_set)
+                random_image = "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
+                new_sentence = Sentence(text=text, parent_set=current_set, image_url=random_image)
                 new_sentence.save()
                 
             return redirect('view_page', id=id)
@@ -73,10 +77,25 @@ def pick_images(request, id):
     set = Set.objects.get(pk=id)
     sentences_queryset = Sentence.objects.filter(parent_set=id).values()
     sentences = [sentence for sentence in sentences_queryset]
+
+
     # For each sentence, create a bound form to return:
     sentence_forms = [SentenceForm({'text':sentence['text']}) for sentence in sentences]
+    # Create list from it
+    form_list = list(sentence_forms)
 
-    return render(request, 'pick_images.html', {'sentences':sentences, 'sentence_forms':sentence_forms, 'set':set})
+    # For each sentence form, generate three images:
+    # API CALLS HERE
+    image_array = []
+    for form in sentence_forms:
+        image1 = "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
+        image2 = "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
+        image3 = "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
+        image_array.append([image1,image2,image3])
+
+    data_zip = zip(form_list, image_array)
+
+    return render(request, 'pick_images.html', {'sentences':sentences, 'sentence_forms':sentence_forms, 'set':set,'data_zip':data_zip})
 
 def view_page(request, id):
     set = Set.objects.get(pk=id)

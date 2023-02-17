@@ -7,8 +7,13 @@
 	<form action="{% url 'pick_images' set.id %}" method="post">
 			{% csrf_token %}
 			<ol>
-			{% for form in sentence_forms %}
+
+			{% for form, images in data_zip %}
 				<li>{{ form.as_p }}</li>
+				
+				{% for image in images %}
+					<img src={{ image }}/>
+				{% endfor %}
 			{% endfor %}
 			</ol>
 			<input type="submit" class="btn btn-secondary" value="Submit">
