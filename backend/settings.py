@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'editor',
     'gTTS',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

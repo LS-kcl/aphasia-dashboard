@@ -1,10 +1,14 @@
+from rest_framework import generics, status
+from rest_framework.response import Response
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
+from django.db import transaction, IntegrityError
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set
+from .serializers import ParagraphSerializer
 from gTTS.templatetags.gTTS import say
-# import requests
+import requests
 import random
 
 
@@ -119,3 +123,23 @@ def view_page(request, id):
 def browse(request):
     sets = Set.objects.all()
     return render(request, 'browse.html', {'sets':sets})
+
+class CreateParagraph(generics.CreateAPIView):
+    """ Endpoint for creating new Paragraphs """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    serializer_class = ParagraphSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Attempt to save paragraph to db
+        try:
+            with transaction.atomic():
+                serializer.save()
+        except IntegrityError:
+            return Response(data="Could not save the Paragraph", status=status.HTTP_403_FORBIDDEN)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

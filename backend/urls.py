@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from editor import views
+from editor.views import CreateParagraph
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +25,7 @@ urlpatterns = [
     path('create/pick_images/<int:id>', views.pick_images, name='pick_images'),
     path('create/view_page/<int:id>', views.view_page, name='view_page'),
     path('browse/', views.browse, name='browse'),
+
+    # API URLS
+    path('api/create_paragraph', CreateParagraph.as_view(), name='api_create_paragraph')
 ]
