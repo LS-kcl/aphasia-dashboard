@@ -54,11 +54,15 @@ def pick_images(request, id):
         print(is_valid)
         if all(is_valid):
             print("Forms are all valid")
-            # If all forms are valid, create objects, and redirect to new page
-            ### Commented out to prevent duplication glitch, look into making this edit the already existing sentences, or clearing first ###
-            # for text in forms_submissions:
-            #     new_sentence = Sentence(text=text, parent_set=current_set)
-            #     new_sentence.save()
+
+            # If all forms are valid, delete all old objects, create new objects, and redirect to new page
+            current_set.sentence_set.all().delete()
+
+            # NOTE: If taking this approach, and simply creating new objects from form input, consider
+            #       refactoring from a model form to a regular form
+            for text in forms_submissions:
+                new_sentence = Sentence(text=text, parent_set=current_set)
+                new_sentence.save()
                 
             return redirect('view_page', id=id)
         
