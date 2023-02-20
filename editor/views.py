@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db import transaction, IntegrityError
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, NoIDSetSerializer
 from gTTS.templatetags.gTTS import say
 import requests
 import random
@@ -135,6 +135,26 @@ class ListSets(generics.ListAPIView):
     # We override the built in get_queryset method to return the objects we want
     def get_queryset(self):
         return Set.objects.all()
+
+class CreateSet(generics.CreateAPIView):
+    """ Endpoint for creating new Sets """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    serializer_class = NoIDSetSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Attempt to save set to db
+        try:
+            with transaction.atomic():
+                serializer.save()
+        except IntegrityError:
+            return Response(data="Could not save the Set", status=status.HTTP_403_FORBIDDEN)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class CreateParagraph(generics.CreateAPIView):
     """ Endpoint for creating new Paragraphs """
