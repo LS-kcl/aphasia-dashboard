@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db import transaction, IntegrityError
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set
-from .serializers import ParagraphSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer
 from gTTS.templatetags.gTTS import say
 import requests
 import random
@@ -123,6 +123,18 @@ def view_page(request, id):
 def browse(request):
     sets = Set.objects.all()
     return render(request, 'browse.html', {'sets':sets})
+
+class ListSets(generics.ListAPIView):
+    """ Endpoint for listing all sets """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    serializer_class = SetPlusSentencesSerializer
+
+
+    # We override the built in get_queryset method to return the objects we want
+    def get_queryset(self):
+        return Set.objects.all()
 
 class CreateParagraph(generics.CreateAPIView):
     """ Endpoint for creating new Paragraphs """

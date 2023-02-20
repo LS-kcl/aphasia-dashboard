@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from editor import views
-from editor.views import CreateParagraph
+from editor.views import CreateParagraph, ListSets
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,5 +27,6 @@ urlpatterns = [
     path('browse/', views.browse, name='browse'),
 
     # API URLS
-    path('api/create_paragraph', CreateParagraph.as_view(), name='api_create_paragraph')
+    path('api/create_paragraph', CreateParagraph.as_view(), name='api_create_paragraph'),
+    path('api/list_sets', ListSets.as_view(), name='api_list_sets')
 ]
