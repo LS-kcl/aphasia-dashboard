@@ -14,6 +14,11 @@ class SetSerializer(serializers.ModelSerializer):
         model=Set
         fields='__all__'
 
+class NoIDSetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Set
+        fields=(['title'])
+
 class SetPlusSentencesSerializer(serializers.ModelSerializer):
     # Add data of child sentences as a field using a method
     # See: https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
