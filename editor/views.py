@@ -1,9 +1,10 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.contrib import messages
 from django.db import transaction, IntegrityError
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set
 from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, NoIDSetSerializer
@@ -136,6 +137,25 @@ class ListSets(generics.ListAPIView):
     def get_queryset(self):
         return Set.objects.all()
 
+class ViewSet(generics.RetrieveAPIView):
+    """ Endpoint for returning data on a set specified by id """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    serializer_class = SetPlusSentencesSerializer
+
+    def get_object(self):
+        set_id = self.kwargs.get('set_id')
+
+        # Check if set exists, else return exception
+        try:
+            set = Set.objects.get(pk=set_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            raise Http404
+        
+        # Return the set object
+        return set
+
 class CreateSet(generics.CreateAPIView):
     """ Endpoint for creating new Sets """
     # Currently we do not require authentication:
@@ -175,3 +195,43 @@ class CreateParagraph(generics.CreateAPIView):
             return Response(data="Could not save the Paragraph", status=status.HTTP_403_FORBIDDEN)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class DeleteSet(generics.DestroyAPIView):
+    """ Endpoint for deleting sets """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    lookup_url_kwarg = 'set_id'
+
+    def destroy(self, request, *args, **kwargs):
+        set_id = kwargs.get('set_id')
+
+        # Check if set exists, else return exception
+        try:
+            set = Set.objects.get(pk=set_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            return Response(data={'message':'Set does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Delete set and return success
+        set.delete()
+        return Response(data={'message':'Set deleted successfully'}, status=status.HTTP_200_OK)
+
+class DeleteSentence(generics.DestroyAPIView):
+    """ Endpoint for deleting sentences """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    lookup_url_kwarg = 'sentence_id'
+
+    def destroy(self, request, *args, **kwargs):
+        sentence_id = kwargs.get('sentence_id')
+
+        # Check if sentence exists, else return exception
+        try:
+            sentence = Sentence.objects.get(pk=sentence_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            return Response(data={'message':'Sentence does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Delete sentence and return success
+        sentence.delete()
+        return Response(data={'message':'Sentence deleted successfully'}, status=status.HTTP_200_OK)
