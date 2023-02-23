@@ -61,4 +61,6 @@ Instead, it will copy all the configuration files and the transitive dependencie
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use th    is feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
 # Resources used:
-https://pytutorial.com/django-text-to-speech/
+[Django text to speech](https://pytutorial.com/django-text-to-speech/)
+[Installing axios for react](https://www.digitalocean.com/community/tutorials/react-axios-react)
+[Developing react components](https://www.digitalocean.com/community/tutorial_series/how-to-code-in-react-js)
