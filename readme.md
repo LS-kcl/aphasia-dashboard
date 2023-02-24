@@ -64,3 +64,4 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 [Django text to speech](https://pytutorial.com/django-text-to-speech/)
 [Installing axios for react](https://www.digitalocean.com/community/tutorials/react-axios-react)
 [Developing react components](https://www.digitalocean.com/community/tutorial_series/how-to-code-in-react-js)
+[Installing bootstrap for React](https://create-react-app.dev/docs/adding-bootstrap/)
