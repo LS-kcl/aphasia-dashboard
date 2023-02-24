@@ -65,3 +65,5 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 [Installing axios for react](https://www.digitalocean.com/community/tutorials/react-axios-react)
 [Developing react components](https://www.digitalocean.com/community/tutorial_series/how-to-code-in-react-js)
 [Installing bootstrap for React](https://create-react-app.dev/docs/adding-bootstrap/)
+[Using react-bootstrap for responsive web design](https://react-bootstrap.github.io/layout/grid/)
+[Setting innerHTML values in React](https://blog.logrocket.com/using-dangerouslysetinnerhtml-in-a-react-application/)
