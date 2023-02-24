@@ -16,14 +16,14 @@ export default class PageList extends React.Component {
 
     render() {
         return (
-            <ul>
+            <ol>
                 {
                     this.state.pages
                         .map(page =>
                             <li key={page.id}>{page.title}</li>
                         )
                 }
-            </ul>
+            </ol>
         )
     }
 }
