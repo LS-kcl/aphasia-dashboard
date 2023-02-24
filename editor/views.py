@@ -163,18 +163,18 @@ class CreateSet(generics.CreateAPIView):
     permission_classes = []
     serializer_class = NoIDSetSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        # Attempt to save set to db
-        try:
-            with transaction.atomic():
-                serializer.save()
-        except IntegrityError:
-            return Response(data="Could not save the Set", status=status.HTTP_403_FORBIDDEN)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    # 
+    #     # Attempt to save set to db
+    #     try:
+    #         with transaction.atomic():
+    #             serializer.save()
+    #     except IntegrityError:
+    #         return Response(data="Could not save the Set", status=status.HTTP_403_FORBIDDEN)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class CreateParagraph(generics.CreateAPIView):
     """ Endpoint for creating new Paragraphs """
