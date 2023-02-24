@@ -1,11 +1,19 @@
 import React from "react";
 import axios from "axios";
+import { Remarkable } from "remarkable";
 
 import { Container, Row, Col } from "react-bootstrap";
 
 export default class SetAdd extends React.Component {
-    state = {
-        text: ''
+    constructor(props){
+        super(props);
+        this.markdown = new Remarkable();
+        this.handleChange = this.handleChange.bind(this);
+        this.state = { text: '' };
+    }
+
+    getRawMarkup() {
+        return { __html: this.markdown.render(this.state.text) }
     }
 
     handleChange = event => {
@@ -36,7 +44,10 @@ export default class SetAdd extends React.Component {
                         />
                     </Col>
                     <Col>
-                        <p>{this.state.text}</p>
+                        <div
+                            className="output"
+                            dangerouslySetInnerHTML={this.getRawMarkup()}
+                        />
                     </Col>
                 </Row>
             </Container>
