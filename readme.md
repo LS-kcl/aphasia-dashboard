@@ -1,13 +1,14 @@
 # Doing
-- Create React frontend to connect APIs to
+- Create views for external API calls 
 
 # To-do (before next set of office hours):
 - Implement image selection to add images to sentences
 - Try to implement AI image generation into image selection
+- Host site on heroku
+- Write up quick draft of report for feedback
 
 # Stretch goals:
 - Begin some work on the report
-- Begin some testing for views/redirects
 - Start implementing login functionality
 - Add navbar to move between pages
 
@@ -17,6 +18,7 @@
 - Complete browse page to show all created sets
 - Implement tests for models
 - Migrate from view functions to API calls
+- Create React frontend to connect APIs to
 
 # Notes for frontend:
 ## Requirements:

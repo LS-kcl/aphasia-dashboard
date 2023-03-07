@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
-from .models import Paragraph, Sentence, Set
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, NoIDSetSerializer
+from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, NoIDSetSerializer, GenerateImageSerializer, ImageSelectionSerializer
 from gTTS.templatetags.gTTS import say
 import requests
 import random
@@ -175,6 +175,51 @@ class CreateSet(generics.CreateAPIView):
     #         return Response(data="Could not save the Set", status=status.HTTP_403_FORBIDDEN)
     #     headers = self.get_success_headers(serializer.data)
     #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class CreateImageSelection(generics.CreateAPIView):
+    """ Endpoint for generating images """  
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    serializer_class = GenerateImageSerializer
+
+    # Replace with kwarg passed in from URL
+    images_requested = 3
+
+    # Override create function to generate images
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # We do not acccept calls for more than 3 images
+        if images_requested > 3:
+            return Response(data="Cannot request more than 3 images", status=status.HTTP_403_FORBIDDEN)
+
+        # We do not acccept calls for less than 1 image
+        if images_requested < 1:
+            return Response(data="Cannot request less than 1 image", status=status.HTTP_403_FORBIDDEN)
+
+        # Extract prompt
+        prompt = request.data.prompt
+        # We atomically generate and save objects:
+        # Either all images are saved and set is created, or none are
+        try:
+            with transaction.atomic():
+                # Create a new ImageSet object 
+                image_selection = ImageSelection.objects.create()
+                
+                # Generate number of images required and add to set
+                for i in range(images_requested):
+                    image_url = generate_ai_image(prompt)
+                    generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=image_url)
+                    
+        except IntegrityError:
+            return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
+
+        # Return successful response
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class CreateParagraph(generics.CreateAPIView):
     """ Endpoint for creating new Paragraphs """
