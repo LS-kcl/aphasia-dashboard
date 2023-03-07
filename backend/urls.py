@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from editor import views
-from editor.views import CreateParagraph, CreateSet, ListSets, DeleteSet, DeleteSentence, ViewSet
+from editor.views import CreateParagraph, CreateSet, ListSets, DeleteSet, DeleteSentence, ViewSet, CreateImageSelection
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +32,6 @@ urlpatterns = [
     path('api/list_sets', ListSets.as_view(), name='api_list_sets'),
     path('api/view_set/<int:set_id>', ViewSet.as_view(), name='api_view_set'),
     path('api/delete_set/<int:set_id>', DeleteSet.as_view(), name='api_delete_set'),
-    path('api/delete_sentence/<int:sentence_id>', DeleteSentence.as_view(), name='api_delete_sentence')
+    path('api/delete_sentence/<int:sentence_id>', DeleteSentence.as_view(), name='api_delete_sentence'),
+    path('api/generate_prompts/', CreateImageSelection.as_view(), name='create_image_selection')
 ]

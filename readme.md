@@ -18,7 +18,6 @@
 - Complete browse page to show all created sets
 - Implement tests for models
 - Migrate from view functions to API calls
-- Create React frontend to connect APIs to
 
 # Notes for frontend:
 ## Requirements:
@@ -70,3 +69,15 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 [Using react-bootstrap for responsive web design](https://react-bootstrap.github.io/layout/grid/)
 [Setting innerHTML values in React](https://blog.logrocket.com/using-dangerouslysetinnerhtml-in-a-react-application/)
 [Rendering markdown in the page](https://www.npmjs.com/package/remarkable-react)
+
+# External APIs used:
+
+# Costs:
+
+Heroku Web Hosting Services: £24 (6 months £4/mo eco dyno hosting)
+Heroku Postgres Database: £24 (6 months £4/mo mini plan)
+Google Cloud Text-to-Speech: £0 (WaveNet free character allowance)
+Unsplash Image API: £0 (50 requests/hr free allowance)
+OpenAI Image Generation: £12 (Estimated 1500 images at £0.02/image, minus £18 free credits)
+
+Total: £60

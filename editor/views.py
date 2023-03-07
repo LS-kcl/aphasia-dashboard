@@ -183,13 +183,15 @@ class CreateImageSelection(generics.CreateAPIView):
     permission_classes = []
     serializer_class = GenerateImageSerializer
 
-    # Replace with kwarg passed in from URL
-    images_requested = 3
-
     # Override create function to generate images
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        # Replace with kwarg passed in from URL
+        # Extract prompt and images requested from page
+        prompt = request.data.prompt
+        images_requested = request.data.images_requested
 
         # We do not acccept calls for more than 3 images
         if images_requested > 3:
@@ -199,8 +201,6 @@ class CreateImageSelection(generics.CreateAPIView):
         if images_requested < 1:
             return Response(data="Cannot request less than 1 image", status=status.HTTP_403_FORBIDDEN)
 
-        # Extract prompt
-        prompt = request.data.prompt
         # We atomically generate and save objects:
         # Either all images are saved and set is created, or none are
         try:
@@ -280,3 +280,8 @@ class DeleteSentence(generics.DestroyAPIView):
         # Delete sentence and return success
         sentence.delete()
         return Response(data={'message':'Sentence deleted successfully'}, status=status.HTTP_200_OK)
+
+#### Helper functions:
+def generate_ai_image(prompt):
+    # Use prompt to query an AI generated image
+    return "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
