@@ -181,7 +181,7 @@ class CreateImageSelection(generics.CreateAPIView):
     # Currently we do not require authentication:
     # permission_classes = [IsAuthenticated]
     permission_classes = []
-    serializer_class = GenerateImageSerializer
+    serializer_class = ImageSelectionSerializer
 
     # Override create function to generate images
     def create(self, request, *args, **kwargs):
@@ -190,8 +190,8 @@ class CreateImageSelection(generics.CreateAPIView):
 
         # Replace with kwarg passed in from URL
         # Extract prompt and images requested from page
-        prompt = request.data.prompt
-        images_requested = request.data.images_requested
+        prompt = serializer.validated_data.get('prompt')
+        images_requested = serializer.validated_data.get('images_requested')
 
         # We do not acccept calls for more than 3 images
         if images_requested > 3:
@@ -205,20 +205,27 @@ class CreateImageSelection(generics.CreateAPIView):
         # Either all images are saved and set is created, or none are
         try:
             with transaction.atomic():
+                print("atomic transaction entered")
                 # Create a new ImageSet object 
-                image_selection = ImageSelection.objects.create()
+                image_selection = ImageSelection.objects.create(prompt=prompt, images_requested=images_requested)
                 
                 # Generate number of images required and add to set
                 for i in range(images_requested):
                     image_url = generate_ai_image(prompt)
+                    print(image_url)
                     generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=image_url)
                     
         except IntegrityError:
             return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
 
         # Return successful response
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # headers = self.get_success_headers(serializer.validated_data)
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        # Instead of returning the validated response back, serialize and send back the new objects
+        return_serializer = ImageSelectionSerializer(image_selection)
+        return Response(return_serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 class CreateParagraph(generics.CreateAPIView):
