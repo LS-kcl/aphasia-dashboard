@@ -19,6 +19,11 @@ class NoIDSetSerializer(serializers.ModelSerializer):
         model=Set
         fields=(['title'])
 
+class SentenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Sentence
+        fields='__all__'
+
 class SetPlusSentencesSerializer(serializers.ModelSerializer):
     # Add data of child sentences as a field using a method
     # See: https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
@@ -33,7 +38,7 @@ class SetPlusSentencesSerializer(serializers.ModelSerializer):
         queryset = Sentence.objects.filter(parent_set=obj.id) 
 
         # Serialize this queryset data
-        serializer = ParagraphSerializer(queryset, many=True)
+        serializer = SentenceSerializer(queryset, many=True)
 
         # Return the serialized data
         return serializer.data
