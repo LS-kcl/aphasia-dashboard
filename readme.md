@@ -75,6 +75,9 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 [Storing secret keys securely for deployment](https://stackoverflow.com/questions/15209978/where-to-store-secret-keys-django)
 [Developing multi-page react apps 1](https://www.geeksforgeeks.org/how-to-create-a-multi-page-website-using-react-js/)
 [Developing multi-page react apps 2](https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react)
+[Remarkable documentation](https://github.com/jonschlinkert/remarkable)
+[Possible solution for stripping markdown](https://www.npmjs.com/package/remove-markdown)
+[Getting values from URL inside component](https://stackoverflow.com/questions/58548767/react-router-dom-useparams-inside-class-component)
 
 # External APIs used:
 
