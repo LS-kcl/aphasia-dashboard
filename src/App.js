@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageList from './pages/SetList';
 import SetAdd from './pages/SetAdd';
 import WriteParagraph from './pages/WriteParagraph'
+import ViewPage from './pages/ViewPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
               <Route path='/' element={<SetAdd/>}/>
               <Route path='/browse' element={<PageList/>}/>
               <Route path='/write_paragraph' element={<WriteParagraph/>}/>
+              <Route path='/view_page' element={<ViewPage/>}/>
           </Routes>
       </Router>
     </div>
