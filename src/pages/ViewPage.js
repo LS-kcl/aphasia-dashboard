@@ -13,7 +13,6 @@ class ViewPage extends React.Component {
     componentDidMount() {
         // Get id value from URL to make request
         let { pageid } = this.props.params;
-        console.log(pageid)
 
         // Make request for page based on pageid
         axios.get('/api/view_set/' + pageid)
