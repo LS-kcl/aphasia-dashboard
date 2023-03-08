@@ -37,6 +37,7 @@ export default class SetAdd extends React.Component {
             <Container>
                 <Row>
                     <Col>
+                        <h3> Enter your text here: </h3>
                         <textarea 
                             id="userInput"
                             onChange={this.handleChange}
@@ -44,6 +45,7 @@ export default class SetAdd extends React.Component {
                         />
                     </Col>
                     <Col>
+                        <h3> Text preview: </h3>
                         <div
                             className="output"
                             dangerouslySetInnerHTML={this.getRawMarkup()}

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import SentenceHelper from "../helpers/SentenceHelper";
+import { Link } from "react-router-dom";
 
 export default class ViewPage extends React.Component {
     state = {
@@ -29,6 +30,10 @@ export default class ViewPage extends React.Component {
                             />
                         )
                 }
+
+                <Link to="/" activeStyle>
+                    Back to home
+                </Link>
             </div>
         )
     }

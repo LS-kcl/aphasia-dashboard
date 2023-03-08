@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default class PageList extends React.Component {
     state = {
@@ -16,14 +17,20 @@ export default class PageList extends React.Component {
 
     render() {
         return (
-            <ol>
-                {
-                    this.state.pages
-                        .map(page =>
-                            <li key={page.id}>{page.title}</li>
-                        )
-                }
-            </ol>
+            <>
+                <ol>
+                    {
+                        this.state.pages
+                            .map(page =>
+                                <li key={page.id}>{page.title}</li>
+                            )
+                    }
+                </ol>
+
+                <Link to="/" activeStyle>
+                    Back to home
+                </Link>
+            </>
         )
     }
 }

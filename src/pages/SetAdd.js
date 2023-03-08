@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default class SetAdd extends React.Component {
     state = {
@@ -33,6 +34,10 @@ export default class SetAdd extends React.Component {
                     </label>
                     <button type="submit">Create Set</button>
                 </form>
+
+                <Link to="/" activeStyle>
+                    Back to home
+                </Link>
             </div>
         )
     }
