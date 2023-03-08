@@ -22,7 +22,11 @@ export default class PageList extends React.Component {
                     {
                         this.state.pages
                             .map(page =>
-                                <li key={page.id}>{page.title}</li>
+                                <li>
+                                    <Link to={"/view_page/" + page.id} activeStyle>
+                                        {page.title}
+                                    </Link>
+                                </li>
                             )
                     }
                 </ol>
