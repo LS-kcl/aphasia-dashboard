@@ -18,6 +18,12 @@ class Set(Model):
         max_length=255,
     )
 
+    # The text to be converted to 
+    text = models.CharField(
+        blank=False,
+        max_length=520,
+    )
+
 class Sentence(Model):
     # A sentence with an accompanying image
     parent_set = models.ForeignKey(Set, on_delete=models.CASCADE)

@@ -7,7 +7,7 @@ from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, NoIDSetSerializer, GenerateImageSerializer, ImageSelectionSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, GenerateImageSerializer, ImageSelectionSerializer
 from gTTS.templatetags.gTTS import say
 import requests
 import random
@@ -162,20 +162,45 @@ class CreateSet(generics.CreateAPIView):
     # Currently we do not require authentication:
     # permission_classes = [IsAuthenticated]
     permission_classes = []
-    serializer_class = NoIDSetSerializer
+    serializer_class = SetSerializer
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    # 
-    #     # Attempt to save set to db
-    #     try:
-    #         with transaction.atomic():
-    #             serializer.save()
-    #     except IntegrityError:
-    #         return Response(data="Could not save the Set", status=status.HTTP_403_FORBIDDEN)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Replace with kwarg passed in from URL
+        # Extract prompt and images requested from page
+        title = serializer.validated_data.get('title')
+        text = serializer.validated_data.get('text')
+
+        # Atomically generate and save objects:
+        # Either all sentences are saved and set is created, or none are
+        try:
+            with transaction.atomic():
+                # Create sentences from this text, and add to a set
+                ## Delimit text
+                sentences = text.split(".")
+                ## Strip leading and trailing spaces
+                stripped_sentences = [sentence.strip() for sentence in sentences]
+                ## Filter empty sentences out
+                filtered_sentences = [sentence for sentence in stripped_sentences if sentence]
+                ## Create set
+                set = Set.objects.create()
+                ## For delimited text:
+                for sentence in filtered_sentences:
+                    ## Create sentence and add to set
+                    Sentence.objects.create(parent_set=set,text=sentence)
+
+        except IntegrityError:
+            return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
+
+        # Return successful response
+        # headers = self.get_success_headers(serializer.validated_data)
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        # Instead of returning the validated response back, serialize and send back the new objects
+        return_serializer = SetPlusSentencesSerializer(set)
+        return Response(return_serializer.data, status=status.HTTP_201_CREATED)
 
 class CreateImageSelection(generics.CreateAPIView):
     """ Endpoint for generating images """  
