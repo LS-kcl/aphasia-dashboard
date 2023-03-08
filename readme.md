@@ -69,6 +69,7 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 [Using react-bootstrap for responsive web design](https://react-bootstrap.github.io/layout/grid/)
 [Setting innerHTML values in React](https://blog.logrocket.com/using-dangerouslysetinnerhtml-in-a-react-application/)
 [Rendering markdown in the page](https://www.npmjs.com/package/remarkable-react)
+[Storing secret keys securely for deployment](https://stackoverflow.com/questions/15209978/where-to-store-secret-keys-django)
 
 # External APIs used:
 
