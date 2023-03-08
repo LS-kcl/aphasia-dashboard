@@ -1,8 +1,10 @@
 # Doing
-- Create views for external API calls 
+- Learn how to create react cards to be displayed for each set
+- Learn how to create pages and redirect in react
+- Implement image selection to add images to sentences
+- Implement GTTS on frontend
 
 # To-do (before next set of office hours):
-- Implement image selection to add images to sentences
 - Try to implement AI image generation into image selection
 - Host site on heroku
 - Write up quick draft of report for feedback
@@ -18,6 +20,7 @@
 - Complete browse page to show all created sets
 - Implement tests for models
 - Migrate from view functions to API calls
+- Create views for external API calls 
 
 # Notes for frontend:
 ## Requirements:
