@@ -62,7 +62,7 @@ If you aren't satisfied with the build tool and configuration choices, you can `
 
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have     full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this     point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use th    is feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
 # Resources used:
 [Django text to speech](https://pytutorial.com/django-text-to-speech/)
@@ -73,6 +73,8 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 [Setting innerHTML values in React](https://blog.logrocket.com/using-dangerouslysetinnerhtml-in-a-react-application/)
 [Rendering markdown in the page](https://www.npmjs.com/package/remarkable-react)
 [Storing secret keys securely for deployment](https://stackoverflow.com/questions/15209978/where-to-store-secret-keys-django)
+[Developing multi-page react apps 1](https://www.geeksforgeeks.org/how-to-create-a-multi-page-website-using-react-js/)
+[Developing multi-page react apps 2](https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react)
 
 # External APIs used:
 
