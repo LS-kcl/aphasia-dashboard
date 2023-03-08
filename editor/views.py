@@ -11,6 +11,7 @@ from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, NoIDSe
 from gTTS.templatetags.gTTS import say
 import requests
 import random
+import openai
 
 
 def home(request):
@@ -210,10 +211,15 @@ class CreateImageSelection(generics.CreateAPIView):
                 image_selection = ImageSelection.objects.create(prompt=prompt, images_requested=images_requested)
                 
                 # Generate number of images required and add to set
-                for i in range(images_requested):
-                    image_url = generate_ai_image(prompt)
-                    print(image_url)
-                    generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=image_url)
+                image_urls = generate_ai_image(prompt, images_requested)
+
+                for url in image_urls:
+                    generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url["url"])
+
+                # for i in range(images_requested):
+                #     image_url = generate_ai_image(prompt)
+                #     print(image_url)
+                #     generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=image_url)
                     
         except IntegrityError:
             return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
@@ -289,6 +295,15 @@ class DeleteSentence(generics.DestroyAPIView):
         return Response(data={'message':'Sentence deleted successfully'}, status=status.HTTP_200_OK)
 
 #### Helper functions:
-def generate_ai_image(prompt):
+def generate_ai_image(prompt, number_to_generate):
     # Use prompt to query an AI generated image
-    return "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
+    # TODO: Add timeout or error handling when method not allowed
+    response = openai.Image.create(
+        prompt=prompt,
+        n=number_to_generate,
+        size="512x512"
+    )
+    return response["data"]
+
+    # Testing line
+    # return ["https://picsum.photos/id/%s/300" %str(random.randint(0,300))]
