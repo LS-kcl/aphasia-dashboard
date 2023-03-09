@@ -18,7 +18,10 @@ class ViewPage extends React.Component {
         axios.get('/api/view_set/' + pageid)
             .then(res =>{
                 const responsejson = res.data;
-                this.setState({parentid: 0, sentences: responsejson.child_sentences })
+                this.setState({
+                    parentid: responsejson.id, 
+                    sentences: responsejson.child_sentences 
+                })
             })
     }
 
@@ -31,7 +34,7 @@ class ViewPage extends React.Component {
                             <SentenceHelper 
                                 parent_set={this.state.parentid}
                                 text={sentence.text}
-                                image_url={"text"}
+                                image_url={sentence.image_url}
                             />
                         )
                 }

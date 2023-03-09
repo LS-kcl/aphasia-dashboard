@@ -6,7 +6,6 @@ export default function SentenceHelper({ parent_set, text, image_url}) {
         <div>
             <p>{text}</p>
             <img src={image_url}/>
-            <p>{parent_set}</p>
         </div>
     )
 }
