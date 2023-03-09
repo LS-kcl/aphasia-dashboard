@@ -35,7 +35,7 @@ class Sentence(Model):
 
     # Accompanying image as a URL 
     # NOTE: This many cause issues with links not starting with http
-    image_url = models.URLField(max_length=200, blank=True, default='https://picsum.photos/id/237/200/300')
+    image_url = models.URLField(max_length=520, blank=True, default='https://picsum.photos/id/237/200/300')
 
 class ImageSelection(Model):
     # A selection of various generated images
