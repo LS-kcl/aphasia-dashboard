@@ -24,6 +24,11 @@ class SentenceSerializer(serializers.ModelSerializer):
         model=Sentence
         fields='__all__'
 
+class SentenceImageURLOnlySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Sentence
+        fields=(['image_url'])
+
 class SetPlusSentencesSerializer(serializers.ModelSerializer):
     # Add data of child sentences as a field using a method
     # See: https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield

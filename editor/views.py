@@ -7,7 +7,7 @@ from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, GenerateImageSerializer, ImageSelectionSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, SentenceSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer
 from gTTS.templatetags.gTTS import say
 import requests
 import random
@@ -156,6 +156,16 @@ class ViewSet(generics.RetrieveAPIView):
         
         # Return the set object
         return set
+
+class SetSentenceImage(generics.UpdateAPIView):
+    """ Endpoint for setting the image of a Sentence """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    queryset = Sentence.objects.all()
+    permission_classes = []
+    serializer_class = SentenceImageURLOnlySerializer
+
+    # NOTE: This url updates and returns the URL ONLY, not the whole updated sentence object
 
 class CreateSet(generics.CreateAPIView):
     """ Endpoint for creating new Sets """
