@@ -161,6 +161,7 @@ class SetSentenceImage(generics.UpdateAPIView):
     """ Endpoint for setting the image of a Sentence """
     # Currently we do not require authentication:
     # permission_classes = [IsAuthenticated]
+    lookup_url_kwarg = 'sentence_id'
     queryset = Sentence.objects.all()
     permission_classes = []
     serializer_class = SentenceImageURLOnlySerializer
