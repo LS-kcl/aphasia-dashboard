@@ -196,7 +196,7 @@ class CreateSet(generics.CreateAPIView):
                 ## Filter empty sentences out
                 filtered_sentences = [sentence for sentence in stripped_sentences if sentence]
                 ## Create set
-                set = Set.objects.create()
+                set = Set.objects.create(title=title,text=text)
                 ## For delimited text:
                 for sentence in filtered_sentences:
                     ## Create sentence and add to set
