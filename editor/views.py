@@ -7,7 +7,7 @@ from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, SentenceSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, SentenceSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer
 from gTTS.templatetags.gTTS import say
 import requests
 import random
@@ -157,6 +157,25 @@ class ViewSet(generics.RetrieveAPIView):
         # Return the set object
         return set
 
+class ViewSetAndImages(generics.RetrieveAPIView):
+    """ Endpoint for returning data on a set specified by id """
+    # Currently we do not require authentication:
+    # permission_classes = [IsAuthenticated]
+    permission_classes = []
+    serializer_class = SetAllChildrenSerializer
+
+    def get_object(self):
+        set_id = self.kwargs.get('set_id')
+
+        # Check if set exists, else return exception
+        try:
+            set = Set.objects.get(pk=set_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            raise Http404
+        
+        # Return the set object
+        return set
+
 class SetSentenceImage(generics.UpdateAPIView):
     """ Endpoint for setting the image of a Sentence """
     # Currently we do not require authentication:
@@ -227,6 +246,7 @@ class CreateImageSelection(generics.CreateAPIView):
 
         # Replace with kwarg passed in from URL
         # Extract prompt and images requested from page
+        parent_sentence = serializer.validated_data.get('parent_sentence')
         prompt = serializer.validated_data.get('prompt')
         images_requested = serializer.validated_data.get('images_requested')
 
@@ -244,10 +264,12 @@ class CreateImageSelection(generics.CreateAPIView):
             with transaction.atomic():
                 print("atomic transaction entered")
                 # Create a new ImageSet object 
-                image_selection = ImageSelection.objects.create(prompt=prompt, images_requested=images_requested)
+                image_selection = ImageSelection.objects.create(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
+                print(image_selection)
                 
                 # Generate number of images required and add to set
                 image_urls = generate_ai_image(prompt, images_requested)
+                print(image_urls)
 
                 for url in image_urls:
                     generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url["url"])

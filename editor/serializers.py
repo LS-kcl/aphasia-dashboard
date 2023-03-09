@@ -29,6 +29,38 @@ class SentenceImageURLOnlySerializer(serializers.ModelSerializer):
         model=Sentence
         fields=(['image_url'])
 
+class SentenceAndImageSelectionSerializer(serializers.ModelSerializer):
+    child_image_selections = serializers.SerializerMethodField()
+
+    class Meta:
+        model=Sentence
+        fields='__all__'
+
+    def get_child_image_selections(self, obj):
+        # Query all child image selections
+        queryset = ImageSelection.objects.filter(parent_sentence=obj.id)
+        serializer = ImageSelectionSerializer(queryset, many=True)
+        return serializer.data
+
+class SetAllChildrenSerializer(serializers.ModelSerializer):
+    # Add data of child sentences as a field using a method
+    # See: https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
+    child_sentences = serializers.SerializerMethodField()
+    
+    class Meta:
+        model=Set
+        fields='__all__'
+
+    def get_child_sentences(self, obj):
+        # Get all child sentences as queryset
+        queryset = Sentence.objects.filter(parent_set=obj.id) 
+
+        # Serialize this queryset data
+        serializer = SentenceAndImageSelectionSerializer(queryset, many=True)
+
+        # Return the serialized data
+        return serializer.data
+
 class SetPlusSentencesSerializer(serializers.ModelSerializer):
     # Add data of child sentences as a field using a method
     # See: https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
