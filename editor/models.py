@@ -51,6 +51,8 @@ class ImageSelection(Model):
         validators=[MaxValueValidator(3), MinValueValidator(1)]
     )
 
+    parent_sentence = models.ForeignKey(Sentence, on_delete=models.CASCADE)
+
 
 class GeneratedImage(Model):
     # A model to store generated images before saving
