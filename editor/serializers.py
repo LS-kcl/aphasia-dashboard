@@ -38,9 +38,13 @@ class SentenceAndImageSelectionSerializer(serializers.ModelSerializer):
 
     def get_child_image_selections(self, obj):
         # Query all child image selections
-        queryset = ImageSelection.objects.filter(parent_sentence=obj.id)
-        serializer = ImageSelectionSerializer(queryset, many=True)
-        return serializer.data
+        try:
+            image_selection = ImageSelection.objects.get(parent_sentence=obj.id)
+            serializer = ImageSelectionSerializer(image_selection)
+            return serializer.data
+        except ImageSelection.DoesNotExist:
+            # Return null if no image exists
+            return
 
 class SetAllChildrenSerializer(serializers.ModelSerializer):
     # Add data of child sentences as a field using a method

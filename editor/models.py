@@ -51,7 +51,7 @@ class ImageSelection(Model):
         validators=[MaxValueValidator(3), MinValueValidator(1)]
     )
 
-    parent_sentence = models.ForeignKey(Sentence, on_delete=models.CASCADE)
+    parent_sentence = models.OneToOneField(Sentence, on_delete=models.CASCADE)
 
 
 class GeneratedImage(Model):
