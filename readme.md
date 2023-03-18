@@ -1,16 +1,23 @@
 # Doing
-- Learn how to create react cards to be displayed for each set
-- Learn how to create pages and redirect in react
 - Implement image selection to add images to sentences
 - Implement GTTS on frontend
-
-# To-do (before next set of office hours):
-- Try to implement AI image generation into image selection
-- Host site on heroku
 - Write up quick draft of report for feedback
 
+# Urgent (Before meeting with Speech Therapist)
+- Host site on heroku
+- Solve issue of converting markdown back to plaintext
+- Try to implement AI image generation into image selection
+
+# To-do (before next set of office hours):
+- Implement login functionality
+- Implementing shareable controls (the person producing the content can edit and choose whether it is shared publically via link or not)
+- Implementing edit functionality to the site to edit already created sets (and maybe even re-pick images)
+- Long term image storage
+- Complete model & API testing with fixtures
+- Complete frontend testing
+
 # Stretch goals:
-- Begin some work on the report
+- Allow users to upload their own images
 - Start implementing login functionality
 - Add navbar to move between pages
 
@@ -21,6 +28,8 @@
 - Implement tests for models
 - Migrate from view functions to API calls
 - Create views for external API calls 
+- Learn how to create react cards to be displayed for each set
+- Learn how to create pages and redirect in react
 
 # Notes for frontend:
 ## Requirements:
