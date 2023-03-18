@@ -60,5 +60,7 @@ class GeneratedImage(Model):
         blank=False,
         max_length=520,
     )
+
+    selected = models.BooleanField(default=False)
     
     parent_selection = models.ForeignKey(ImageSelection, on_delete=models.CASCADE)
