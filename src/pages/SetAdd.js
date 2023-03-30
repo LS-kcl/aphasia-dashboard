@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+axios.defaults.withCredentials = true;
 
 export default class SetAdd extends React.Component {
     state = {

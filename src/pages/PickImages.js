@@ -3,6 +3,7 @@ import axios from "axios";
 import ImageSelectionHelper from "../helpers/ImageSelectionHelper";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+axios.defaults.withCredentials = true;
 
 class PickImages extends React.Component {
     state = {

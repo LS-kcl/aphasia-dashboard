@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { Remarkable } from "remarkable";
-
 import { Container, Row, Col } from "react-bootstrap";
+axios.defaults.withCredentials = true;
 
 export default class SetAdd extends React.Component {
     constructor(props){

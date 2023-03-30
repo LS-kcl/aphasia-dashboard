@@ -3,6 +3,9 @@ import axios from "axios";
 import SentenceHelper from "../helpers/SentenceHelper";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 class ViewPage extends React.Component {
     state = {
@@ -15,7 +18,7 @@ class ViewPage extends React.Component {
         let { pageid } = this.props.params;
 
         // Make request for page based on pageid
-        axios.get('/api/view_set/' + pageid)
+        axios.get('/api/view_set/' + pageid, {'withCredentials': true })
             .then(res =>{
                 const responsejson = res.data;
                 this.setState({

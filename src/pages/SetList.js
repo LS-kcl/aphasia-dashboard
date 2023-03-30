@@ -2,13 +2,15 @@ import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+axios.defaults.withCredentials = true;
+
 export default class PageList extends React.Component {
     state = {
         pages: []
     }
 
     componentDidMount() {
-        axios.get('/api/list_sets')
+        axios.get('/api/list_sets', {'withCredentials': true })
             .then(res =>{
                 const pages = res.data;
                 this.setState({ pages })

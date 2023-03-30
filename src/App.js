@@ -7,6 +7,14 @@ import WriteParagraph from './pages/WriteParagraph'
 import ViewPage from './pages/ViewPage';
 import PickImages from './pages/PickImages';
 import Home from './pages/Home'; 
+import { Login } from './pages/Login';
+import { setAuthToken } from './helpers/setAuthToken()';
+
+// Check for JWT
+const token = localStorage.getItem("token");
+if (token) {
+    setAuthToken(token);
+}
 
 function App() {
   return (
@@ -14,6 +22,7 @@ function App() {
       <Router>
           <Routes>
               <Route exact path='/' element={<Home/>}/>
+              <Route exact path='/login' element={<Login/>}/>
               <Route exact path='/add_set' element={<SetAdd/>}/>
               <Route exact path='/browse' element={<PageList/>}/>
               <Route exact path='/write_paragraph' element={<WriteParagraph/>}/>
