@@ -88,6 +88,8 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 [Possible solution for stripping markdown](https://www.npmjs.com/package/remove-markdown)
 [Getting values from URL inside component](https://stackoverflow.com/questions/58548767/react-router-dom-useparams-inside-class-component)
 [Setting up login and authentication cookies for React](https://priyanshuguptaofficial.medium.com/django-and-react-integration-b712321a5232)
+[Setting up login and authentication cookies for React 2](https://medium.com/@ronakchitlangya1997/jwt-authentication-with-react-js-and-django-c034aae1e60d)
+[JWT tokens simplified](https://www.permify.co/post/jwt-authentication-in-react)
 
 # External APIs used:
 
