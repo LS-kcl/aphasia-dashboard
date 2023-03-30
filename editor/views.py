@@ -1,15 +1,19 @@
+# RESTFUL API imports
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.decorators import permission_classes, authentication_classes
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 from django.shortcuts import render, redirect
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.contrib import messages
 from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, SentenceSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer
 from gTTS.templatetags.gTTS import say
-import requests
 import random
 import openai
 
@@ -128,9 +132,7 @@ def browse(request):
 
 class ListSets(generics.ListAPIView):
     """ Endpoint for listing all sets """
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = SetPlusSentencesSerializer
 
 
@@ -140,9 +142,7 @@ class ListSets(generics.ListAPIView):
 
 class ViewSet(generics.RetrieveAPIView):
     """ Endpoint for returning data on a set specified by id """
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = SetPlusSentencesSerializer
 
     def get_object(self):
@@ -159,9 +159,7 @@ class ViewSet(generics.RetrieveAPIView):
 
 class ViewSetAndImages(generics.RetrieveAPIView):
     """ Endpoint for returning data on a set specified by id """
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = SetAllChildrenSerializer
 
     def get_object(self):
@@ -178,20 +176,16 @@ class ViewSetAndImages(generics.RetrieveAPIView):
 
 class SetSentenceImage(generics.UpdateAPIView):
     """ Endpoint for setting the image of a Sentence """
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     lookup_url_kwarg = 'sentence_id'
     queryset = Sentence.objects.all()
-    permission_classes = []
     serializer_class = SentenceImageURLOnlySerializer
 
     # NOTE: This url updates and returns the URL ONLY, not the whole updated sentence object
 
 class CreateSet(generics.CreateAPIView):
     """ Endpoint for creating new Sets """
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = SetSerializer
 
     def create(self, request, *args, **kwargs):
@@ -234,9 +228,7 @@ class CreateSet(generics.CreateAPIView):
 
 class CreateImageSelection(generics.CreateAPIView):
     """ Endpoint for generating images """  
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = ImageSelectionSerializer
 
     # Override create function to generate images
@@ -294,9 +286,7 @@ class CreateImageSelection(generics.CreateAPIView):
 
 class CreateParagraph(generics.CreateAPIView):
     """ Endpoint for creating new Paragraphs """
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = ParagraphSerializer
 
     def create(self, request, *args, **kwargs):
@@ -314,9 +304,7 @@ class CreateParagraph(generics.CreateAPIView):
 
 class DeleteSet(generics.DestroyAPIView):
     """ Endpoint for deleting sets """
-    # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     lookup_url_kwarg = 'set_id'
 
     def destroy(self, request, *args, **kwargs):
@@ -335,8 +323,7 @@ class DeleteSet(generics.DestroyAPIView):
 class DeleteSentence(generics.DestroyAPIView):
     """ Endpoint for deleting sentences """
     # Currently we do not require authentication:
-    # permission_classes = [IsAuthenticated]
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     lookup_url_kwarg = 'sentence_id'
 
     def destroy(self, request, *args, **kwargs):
