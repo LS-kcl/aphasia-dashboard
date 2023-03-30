@@ -1,9 +1,11 @@
 # RESTFUL API imports
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.shortcuts import render, redirect
 from django.http import Http404
@@ -129,6 +131,18 @@ def view_page(request, id):
 def browse(request):
     sets = Set.objects.all()
     return render(request, 'browse.html', {'sets':sets})
+
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            # Refresh and then blacklist token
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class ListSets(generics.ListAPIView):
     """ Endpoint for listing all sets """

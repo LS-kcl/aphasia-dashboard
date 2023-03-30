@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from editor import views
-from editor.views import CreateParagraph, CreateSet, ListSets, DeleteSet, DeleteSentence, ViewSet, CreateImageSelection, SetSentenceImage, ViewSetAndImages
+from editor.views import CreateParagraph, CreateSet, ListSets, DeleteSet, DeleteSentence, ViewSet, CreateImageSelection, SetSentenceImage, ViewSetAndImages, LogoutView
 from rest_framework import generics
+from rest_framework_simplejwt import views as jwt_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +30,9 @@ urlpatterns = [
 
     # API URLS
     path('api-auth/', include('rest_framework.urls')),
+    path('token/', jwt_views.TokenObtainPairView.as_view(), name='api_obtain_token'),
+    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='api_refresh_token'),
+    path('api/logout', LogoutView.as_view(), name='api_logout'),
     path('api/create_paragraph', CreateParagraph.as_view(), name='api_create_paragraph'),
     path('api/create_set', CreateSet.as_view(), name='api_create_set'),
     path('api/list_sets', ListSets.as_view(), name='api_list_sets'),

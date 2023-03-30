@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
+from datetime import timedelta
 import openai
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +38,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework_simplejwt.authentication.JWTAuthentication',
+   ),
+}
+
+SIMPLE_JWT = {
+     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+     'ROTATE_REFRESH_TOKENS': True,
+     'BLACKLIST_AFTER_ROTATION': True
+}
 
 # Application definition
 
@@ -51,6 +64,7 @@ INSTALLED_APPS = [
     'gTTS',
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 MIDDLEWARE = [
@@ -67,8 +81,10 @@ MIDDLEWARE = [
 
 # Settings for CORS
 # CORS_ALLOWED_ORIGINS = []
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'https://localhost:3000',
+    'https://127.0.0.1:3000',
 ]
 
 ROOT_URLCONF = 'backend.urls'
