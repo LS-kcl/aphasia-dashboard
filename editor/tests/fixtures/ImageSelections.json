@@ -1,0 +1,56 @@
+[
+    {
+        "model": "editor.imageselection",
+        "pk": 1,
+        "fields": {
+            "parent_sentence": 1,
+            "prompt": "A caterpillar eating a leaf",
+            "images_requested": 3
+        }
+    },
+    {
+        "model": "editor.imageselection",
+        "pk": 2,
+        "fields": {
+            "parent_sentence": 2,
+            "prompt": "Hangs from a cocoon",
+            "images_requested": 3
+        }
+    },
+    {
+        "model": "editor.imageselection",
+        "pk": 3,
+        "fields": {
+            "parent_sentence": 3,
+            "prompt": "Transforms into a butterfly",
+            "images_requested": 3
+        }
+    },
+    {
+        "model": "editor.imageselection",
+        "pk": 4,
+        "fields": {
+            "parent_sentence": 4,
+            "prompt": "Little red riding hood goes into the woods",
+            "images_requested": 3
+        }
+    },
+    {
+        "model": "editor.imageselection",
+        "pk": 5,
+        "fields": {
+            "parent_sentence": 5,
+            "prompt": "She hopes to meet her grandmother",
+            "images_requested": 3
+        }
+    },
+    {
+        "model": "editor.imageselection",
+        "pk": 6,
+        "fields": {
+            "parent_sentence": 6,
+            "prompt": "But instead finds a big bad wolf",
+            "images_requested": 3
+        }
+    }
+]

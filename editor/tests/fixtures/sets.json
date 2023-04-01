@@ -1,0 +1,18 @@
+[
+    {
+        "model": "editor.set",
+        "pk": 1,
+        "fields": {
+            "title": "My First Set",
+            "text": "Sample Text"
+        }
+    },
+    {
+        "model": "editor.set",
+        "pk": 2,
+        "fields": {
+            "title": "Another Set",
+            "text": "Sample Text"
+        }
+    }
+]
