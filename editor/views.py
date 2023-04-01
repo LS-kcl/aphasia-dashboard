@@ -240,6 +240,30 @@ class CreateSet(generics.CreateAPIView):
         return_serializer = SetPlusSentencesSerializer(set)
         return Response(return_serializer.data, status=status.HTTP_201_CREATED)
 
+class ToggleSetVisibility(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        set_id = kwargs.get('set_id')
+
+        # If set does not exist, do not update
+        try:
+            set = Set.objects.get(pk=set_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            return Response(data={'message':'Set does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        # If user does not own the set, throw 403_FORBIDDEN
+        if request.user != set.created_by:
+            return Response(data={'message':'User does not have priviliges to change set visibility'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Else toggle visibility
+        set.public = not set.public
+        set.save()
+
+        # Return serialised set
+        return_serializer = SetPlusSentencesSerializer(set)
+        return Response(return_serializer.data, status=status.HTTP_200_OK)
+
 class CreateImageSelection(generics.CreateAPIView):
     """ Endpoint for generating images """  
     permission_classes = [IsAuthenticated]
