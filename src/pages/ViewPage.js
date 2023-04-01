@@ -62,13 +62,12 @@ class ViewPage extends React.Component {
                     {
                         this.state.sentences
                             .map(sentence =>
-                                <div className="message">
                                     <SentenceHelper 
                                         parent_set={this.state.parentid}
                                         text={sentence.text}
                                         image_url={sentence.image_url}
+                                        sound_clip={sentence.sound_clip}
                                     />
-                                </div>
                             )
                     }
 
