@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Model
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
 
 
 # The raw text to be input by the user
@@ -23,6 +24,13 @@ class Set(Model):
         blank=False,
         max_length=520,
     )
+
+    # Whether the page is publicly viewable
+    public = models.BooleanField(default=False)
+
+    # The user who created the set
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 class Sentence(Model):
     # A sentence with an accompanying image
