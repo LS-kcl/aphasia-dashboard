@@ -41,6 +41,11 @@ class Sentence(Model):
         max_length=520,
     )
 
+    sound_clip  = models.CharField(
+        blank=False,
+        max_length=520,
+    )
+
     # Accompanying image as a URL 
     # NOTE: This many cause issues with links not starting with http
     image_url = models.URLField(max_length=520, blank=True, default='https://picsum.photos/id/237/200/300')
