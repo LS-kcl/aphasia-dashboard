@@ -9,8 +9,10 @@ axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 class ViewPage extends React.Component {
     state = {
-        parentid: 0,
-        sentences: []
+        setid: 0,
+        sentences: [],
+        title: "",
+        public: false
     }
 
     componentDidMount() {
@@ -22,30 +24,59 @@ class ViewPage extends React.Component {
             .then(res =>{
                 const responsejson = res.data;
                 this.setState({
-                    parentid: responsejson.id, 
-                    sentences: responsejson.child_sentences 
+                    setid: responsejson.id, 
+                    sentences: responsejson.child_sentences,
+                    title: responsejson.title,
+                    public: responsejson.public 
                 })
             })
     }
 
+    togglePublic = event => {
+        let { pageid } = this.props.params;
+
+        // Make request to toggle visibility API
+        axios.put('/api/toggle_set_visibility/' + pageid, {'withCredentials': true })
+            .then(res =>{
+                const responsejson = res.data;
+                this.setState({
+                    public: responsejson.public 
+                })
+            })
+    
+    }
+
     render() {
         return (
-            <div>
-                {
-                    this.state.sentences
-                        .map(sentence =>
-                            <SentenceHelper 
-                                parent_set={this.state.parentid}
-                                text={sentence.text}
-                                image_url={sentence.image_url}
-                            />
-                        )
-                }
+            <>
+                <div>
+                    <h1>{this.state.title}</h1>
+                    {
+                        this.state.public ? 
+                        <button onClick={this.togglePublic}>Make Private</button> :
+                        <button onClick={this.togglePublic}>Make Public</button>
+                    }
+                </div>
 
-                <Link to="/" activeStyle>
-                    Back to home
-                </Link>
-            </div>
+                <div>
+                    {
+                        this.state.sentences
+                            .map(sentence =>
+                                <div className="message">
+                                    <SentenceHelper 
+                                        parent_set={this.state.parentid}
+                                        text={sentence.text}
+                                        image_url={sentence.image_url}
+                                    />
+                                </div>
+                            )
+                    }
+
+                    <Link to="/" activeStyle>
+                        Back to home
+                    </Link>
+                </div>
+            </>
         )
     }
 }
