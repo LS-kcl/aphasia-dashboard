@@ -223,14 +223,20 @@ class CreateSet(generics.CreateAPIView):
                 ## Filter empty sentences out
                 filtered_sentences = [sentence for sentence in stripped_sentences if sentence]
                 ## Create set
-                set = Set.objects.create(title=title,text=text)
+                set = Set.objects.create(created_by=request.user, title=title,text=text)
+                        
                 ## For delimited text:
                 for sentence in filtered_sentences:
+                    print(sentence)
                     ## Create sentence and add to set
-                    Sentence.objects.create(parent_set=set,text=sentence)
+                    Sentence.objects.create(
+                        parent_set=set,
+                        text=sentence,
+                        sound_clip=say(language='en-uk', text=sentence)
+                    )
 
         except IntegrityError:
-            return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
+            return Response(data="Could not create a set", status=status.HTTP_403_FORBIDDEN)
 
         # Return successful response
         # headers = self.get_success_headers(serializer.validated_data)

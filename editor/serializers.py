@@ -12,7 +12,7 @@ class ParagraphSerializer(serializers.ModelSerializer):
 class SetSerializer(serializers.ModelSerializer):
     class Meta:
         model=Set
-        fields='__all__'
+        fields=(['title', 'text'])
 
 class NoIDSetSerializer(serializers.ModelSerializer):
     class Meta:
