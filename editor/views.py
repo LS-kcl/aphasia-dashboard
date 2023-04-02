@@ -14,7 +14,7 @@ from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer, GenerateImageSerializer
 from gTTS.templatetags.gTTS import say
 import random
 import openai
@@ -205,14 +205,27 @@ class ViewSetAndImages(generics.RetrieveAPIView):
         print(set)
         return set
 
-class SetSentenceImage(generics.UpdateAPIView):
+class ToggleImageSelected(generics.UpdateAPIView):
     """ Endpoint for setting the image of a Sentence """
     permission_classes = [IsAuthenticated]
-    lookup_url_kwarg = 'sentence_id'
-    queryset = Sentence.objects.all()
-    serializer_class = SentenceImageURLOnlySerializer
+    serializer_class = GenerateImageSerializer
 
-    # NOTE: This url updates and returns the URL ONLY, not the whole updated sentence object
+    def update(self, request, *args, **kwargs):
+        generated_image_id = kwargs.get('generated_image_id')
+
+        # If generated image does not exist, return error 404
+        try:
+            generated_image = GeneratedImage.objects.get(pk=generated_image_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            return Response(data={'message':'GeneratedImage does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Toggle selected
+        generated_image.selected = not generated_image.selected
+        generated_image.save()
+
+        # Return serialised set
+        return_serializer = GenerateImageSerializer(generated_image)
+        return Response(return_serializer.data, status=status.HTTP_200_OK)
 
 class CreateSet(generics.CreateAPIView):
     """ Endpoint for creating new Sets """
