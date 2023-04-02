@@ -14,18 +14,19 @@ export default function ImageSelectionHelper({ image_selection }) {
             {
                 // Only render image if exists
                 image_selection ? image_selection.child_images?.map(data =>
-                    <img src={data.url} onClick={e => SetImageRequest(data.url, image_selection.sentenceid)}/>
+                    <img src={data.url} onClick={e => ToggleImageSelected(data.id)}/>
                 ) : null
             }
         </>
     )
 }
 
-function SetImageRequest(url, sentenceid){
-    console.log("Set image function called")
-    const data = { image_url: url }
-    let requesturl = '/api/set_sentence_image/' + sentenceid
-    axios.put(requesturl, { data })
+function ToggleImageSelected(generated_image_id){
+    let requesturl = '/api/toggle_image_selected/' + generated_image_id
+    axios.put(requesturl, {'withCredentials': true })
+        .then(res => {
+            // Do nothing, selected should already be bound
+        })
 }
 // TODO: 
 // Take in sentence as a parameter too
