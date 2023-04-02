@@ -172,7 +172,7 @@ class ViewSet(generics.RetrieveAPIView):
         return set
 
 class ViewSetAndImages(generics.RetrieveAPIView):
-    """ Endpoint for returning data on a set specified by id """
+    """ Endpoint for returning data on a set along with images specified by id, will generate images if none found """
     permission_classes = [IsAuthenticated]
     serializer_class = SetAllChildrenSerializer
 
@@ -184,8 +184,25 @@ class ViewSetAndImages(generics.RetrieveAPIView):
             set = Set.objects.get(pk=set_id)
         except ObjectDoesNotExist or MultipleObjectsReturned:
             raise Http404
+
+        # Get all child sentences
+        sentences = Sentence.objects.filter(parent_set=set) 
+
+        # Generate images for each sentence if not owned
+        for sentence in sentences:
+            if not ImageSelection.objects.filter(parent_sentence=sentence).exists():
+                parent_sentence = sentence
+                prompt = sentence.text
+
+                try:
+                    with transaction.atomic():
+                        # Create a new ImageSelection object 
+                        image_selection = create_image_selection(parent_sentence=parent_sentence, prompt=prompt, images_requested=3)
+                except IntegrityError:
+                    return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
         
         # Return the set object
+        print(set)
         return set
 
 class SetSentenceImage(generics.UpdateAPIView):
@@ -298,23 +315,8 @@ class CreateImageSelection(generics.CreateAPIView):
         # Either all images are saved and set is created, or none are
         try:
             with transaction.atomic():
-                print("atomic transaction entered")
-                # Create a new ImageSet object 
-                image_selection = ImageSelection.objects.create(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
-                print(image_selection)
-                
-                # Generate number of images required and add to set
-                image_urls = generate_ai_image(prompt, images_requested)
-                print(image_urls)
-
-                for url in image_urls:
-                    generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url["url"])
-
-                # for i in range(images_requested):
-                #     image_url = generate_ai_image(prompt)
-                #     print(image_url)
-                #     generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=image_url)
-                    
+                # Create a new ImageSelection object 
+                image_selection = create_image_selection(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
         except IntegrityError:
             return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
 
@@ -396,3 +398,15 @@ def generate_ai_image(prompt, number_to_generate):
 
     # Testing line
     # return ["https://picsum.photos/id/%s/300" %str(random.randint(0,300))]
+
+def create_image_selection(parent_sentence, prompt, images_requested):
+    image_selection = ImageSelection.objects.create(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
+    
+    # Generate number of images required and add to set
+    image_urls = generate_ai_image(prompt, images_requested)
+    print(image_urls)
+
+    for url in image_urls:
+        generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url["url"])
+
+    return image_selection
