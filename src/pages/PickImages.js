@@ -35,9 +35,7 @@ class PickImages extends React.Component {
                     this.state.sentences
                         .map(sentence =>
                             <ImageSelectionHelper 
-                                prompt={sentence.child_image_selections.prompt}
-                                images={sentence.child_image_selections.child_images}
-                                sentenceid={sentence.id}
+                                image_selection={sentence.child_image_selections}
                             />
                         )
                 }
