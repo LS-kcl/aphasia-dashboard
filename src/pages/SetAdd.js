@@ -39,6 +39,8 @@ export default class SetAdd extends React.Component {
             .then(res => {
                 console.log(res);
                 console.log(res.data);
+                // Redirect to homepage
+                window.location.href = '/pick_images/' + res.data.id
             })
     }
 
