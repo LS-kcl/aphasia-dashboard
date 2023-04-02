@@ -12,9 +12,10 @@ export default function ImageSelectionHelper({ image_selection }) {
                 image_selection ? <p>{image_selection.prompt}</p> : <p>The image selection has not been generated</p>
             }
             {
-                image_selection ? image_selection.images?.map(data =>
+                // Only render image if exists
+                image_selection ? image_selection.child_images?.map(data =>
                     <img src={data.url} onClick={e => SetImageRequest(data.url, image_selection.sentenceid)}/>
-                ) : <p>No image could be generated</p>
+                ) : null
             }
         </>
     )
