@@ -19,7 +19,8 @@ export default function ImageSelectionHelper({ image_selection }) {
                 ) : null
             }
             </div>
-            <button className="btn btn-light">Generate New Images</button>
+            <button className="btn btn-light">Generate new images</button>
+            <button className="btn btn-light">Switch to stock images</button>
         </>
     )
 }

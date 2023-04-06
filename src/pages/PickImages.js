@@ -34,7 +34,7 @@ class PickImages extends React.Component {
                 {
                     this.state.sentences
                         .map(sentence =>
-                            <div>
+                            <div className="set col-sm-12 col-md-6 offset-md-3">
                             <ImageSelectionHelper 
                                 image_selection={sentence.child_image_selections}
                             />
