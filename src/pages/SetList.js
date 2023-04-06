@@ -19,24 +19,28 @@ export default class PageList extends React.Component {
 
     render() {
         return (
-            <>
+            <div className="col-sm-12 col-md-6 offset-md-3">
                 <ol>
                     {
                         this.state.pages
                             .map(page =>
-                                <li>
-                                    <Link to={"/view_page/" + page.id} activeStyle>
-                                        {page.title}
-                                    </Link>
-                                </li>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{page.title}</h5>
+                                        <p class="card-text">{page.text}</p>
+                                        <Link to={"/view_page/" + page.id} className="btn btn-light" activeStyle>
+                                            View Page
+                                        </Link>
+                                    </div>
+                                </div>
                             )
                     }
                 </ol>
 
-                <Link to="/" activeStyle>
+                <Link to="/" className="btn btn-light" activeStyle>
                     Back to home
                 </Link>
-            </>
+            </div>
         )
     }
 }

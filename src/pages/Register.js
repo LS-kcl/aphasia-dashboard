@@ -4,8 +4,9 @@ import {useState} from "react";// Define the Login function.
 import { setAuthToken } from "../helpers/setAuthToken()";
 axios.defaults.withCredentials = true;
 
-export const Login = () => {
+export const SignUp = () => {
 		const [username, setUsername] = useState('');
+		const [email, setEmail] = useState('');
 		const [password, setPassword] = useState('');
 		// Create the submit method.
 		const submit = async e => {
@@ -13,10 +14,11 @@ export const Login = () => {
 				
 				const user = {
 						username: username,
+						email: email,
 						password: password
 				};
 
-				axios.post('token/', user).then(res => {
+				axios.post('api/sign_up', user).then(res => {
 						// On resolution of login
 						const token = res.data.access; // NB: Token is returned under "access"
 
@@ -36,7 +38,7 @@ export const Login = () => {
 		return(
 		<div className="col-sm-12 col-md-6 offset-md-3">
 			<form onSubmit={submit}>
-				<h1 className="text-white">Sign In</h1>
+				<h1 className="text-white">Sign Up</h1>
 				<div className="form-group mt-3">
 					<label className="text-white">Username</label>
 					<input className="form-control mt-1" 
@@ -45,6 +47,15 @@ export const Login = () => {
 						type='text' value={username}
 						required 
 						onChange={e => setUsername(e.target.value)}/>
+				</div>
+				<div className="form-group mt-3">
+					<label className="text-white">Email</label>
+					<input className="form-control mt-1" 
+						placeholder="Enter Email" 
+						name='email'  
+						type='text' value={email}
+						required 
+						onChange={e => setEmail(e.target.value)}/>
 				</div>
 				<div className="form-group mt-3">
 					<label className="text-white">Password</label>

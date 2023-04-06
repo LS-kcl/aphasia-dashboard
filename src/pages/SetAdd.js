@@ -47,18 +47,21 @@ export default class SetAdd extends React.Component {
     render() {
         return (
             <div>
-                <h1 className="text-white">Enter a name and some text content for the page</h1>
                 <form onSubmit={this.handleSubmit}>
+                <div class="col-md-5 p-lg-5 mx-auto my-5">
+                    <h1 className="text-white">Create some content</h1>
+                    <p class="lead font-weight-normal">Title your page, enter some text to be made accessible, then watch it pop up as a preview!</p>
+                    <input type="text" name="title" placeholder="Enter title here" onChange={this.handleChangeTitle}/>
                     <label className="text-white">
-                        Set Title:
-                        <input type="text" name="title" onChange={this.handleChangeTitle}/>
                     </label>
+                </div>
                     <Row>
                         <Col>
                             <h3 className="text-white"> Enter your text here: </h3>
                             <textarea 
                                 id="userInput"
                                 name="text"
+                                placeholder="Enter a paragraph or two to be made accessible here"
                                 onChange={this.handleChangeText}
                                 defaultValue={this.state.value}
                             />
