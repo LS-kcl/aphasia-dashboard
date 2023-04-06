@@ -53,8 +53,8 @@ class ViewPage extends React.Component {
                     <h1>{this.state.title}</h1>
                     {
                         this.state.public ? 
-                        <button onClick={this.togglePublic}>Make Private</button> :
-                        <button onClick={this.togglePublic}>Make Public</button>
+                        <button onClick={this.togglePublic} className="btn btn-light">Make Private</button> :
+                        <button onClick={this.togglePublic} className="btn btn-light">Make Public</button>
                     }
                 </div>
 
@@ -71,7 +71,7 @@ class ViewPage extends React.Component {
                             )
                     }
 
-                    <Link to="/" activeStyle>
+                    <Link to="/" className="btn btn-light" activeStyle>
                         Back to home
                     </Link>
                 </div>

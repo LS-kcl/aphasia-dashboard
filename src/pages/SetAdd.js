@@ -47,14 +47,15 @@ export default class SetAdd extends React.Component {
     render() {
         return (
             <div>
+                <h1 className="text-white">Enter a name and some text content for the page</h1>
                 <form onSubmit={this.handleSubmit}>
-                    <label>
+                    <label className="text-white">
                         Set Title:
                         <input type="text" name="title" onChange={this.handleChangeTitle}/>
                     </label>
                     <Row>
                         <Col>
-                            <h3> Enter your text here: </h3>
+                            <h3 className="text-white"> Enter your text here: </h3>
                             <textarea 
                                 id="userInput"
                                 name="text"
@@ -63,19 +64,19 @@ export default class SetAdd extends React.Component {
                             />
                         </Col>
                         <Col>
-                            <h3> Text preview: </h3>
+                            <h3 className="text-white"> Text preview: </h3>
                             <div
                                 className="output"
                                 dangerouslySetInnerHTML={this.getRawMarkup()}
                             />
                         </Col>
                     </Row>
-                    <button type="submit">Create Set</button>
+                    <Link to="/" className="btn btn-light" activeStyle>
+                        Back to home
+                    </Link>
+                    <button type="submit" className="btn btn-light">Create Set</button>
                 </form>
 
-                <Link to="/" activeStyle>
-                    Back to home
-                </Link>
             </div>
         )
     }

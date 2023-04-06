@@ -34,18 +34,17 @@ class PickImages extends React.Component {
                 {
                     this.state.sentences
                         .map(sentence =>
+                            <div>
                             <ImageSelectionHelper 
                                 image_selection={sentence.child_image_selections}
                             />
+                            </div>
                         )
                 }
-                
-                    <p/>
-                    <Link to={"/view_page/" + this.state.pageid} activeStyle>
+                    <Link to={"/view_page/" + this.state.pageid} className="btn btn-light" activeStyle>
                         Create page
                     </Link>
-                    <p/>
-                    <Link to="/" activeStyle>
+                    <Link to="/" className="btn btn-light" activeStyle>
                         Back to home
                     </Link>
             </div>

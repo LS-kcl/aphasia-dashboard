@@ -11,12 +11,15 @@ export default function ImageSelectionHelper({ image_selection }) {
                 // Check image selection is not null before generating selection:
                 image_selection ? <p>{image_selection.prompt}</p> : <p>The image selection has not been generated</p>
             }
+            <div className="row">
             {
                 // Only render image if exists
                 image_selection ? image_selection.child_images?.map(data =>
-                    <img src={data.url} onClick={e => ToggleImageSelected(data.id)}/>
+                    <div className="col"><img src={data.url} onClick={e => ToggleImageSelected(data.id)}/></div>
                 ) : null
             }
+            </div>
+            <button className="btn btn-light">Generate New Images</button>
         </>
     )
 }
