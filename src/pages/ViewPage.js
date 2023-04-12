@@ -29,6 +29,9 @@ class ViewPage extends React.Component {
                     title: responsejson.title,
                     public: responsejson.public 
                 })
+            }).catch(err =>{
+                // Redirect to permission denied
+                window.location.href = '/access_forbidden'
             })
     }
 

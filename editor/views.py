@@ -173,10 +173,11 @@ class ViewSet(generics.RetrieveAPIView):
 
 class ViewSetAndImages(generics.RetrieveAPIView):
     """ Endpoint for returning data on a set along with images specified by id, will generate images if none found """
-    permission_classes = [IsAuthenticated]
+    # Authentication is instead checked on return
+    # permission_classes = [IsAuthenticated]
     serializer_class = SetAllChildrenSerializer
 
-    def get_object(self):
+    def get_object(self, request, *args, **kwargs):
         set_id = self.kwargs.get('set_id')
 
         # Check if set exists, else return exception
@@ -184,6 +185,10 @@ class ViewSetAndImages(generics.RetrieveAPIView):
             set = Set.objects.get(pk=set_id)
         except ObjectDoesNotExist or MultipleObjectsReturned:
             raise Http404
+
+        # Ensure either set is public, or the requesting user owns the set:
+        if not set.public and not (request.user == set.created_by):
+            return Response(data={'message':'You do not have access to view this page'}, status=status.HTTP_403_FORBIDDEN)
 
         # Get all child sentences
         sentences = Sentence.objects.filter(parent_set=set) 

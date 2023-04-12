@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import PageList from './pages/SetList';
 import SetAdd from './pages/SetAdd';
@@ -7,6 +7,8 @@ import WriteParagraph from './pages/WriteParagraph'
 import ViewPage from './pages/ViewPage';
 import PickImages from './pages/PickImages';
 import Home from './pages/Home'; 
+import AccessForbidden from './pages/AccessForbidden';
+import NotFound from './pages/NotFound';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/Register';
 import { setAuthToken } from './helpers/setAuthToken()';
@@ -30,6 +32,12 @@ function App() {
               <Route exact path='/write_paragraph' element={<WriteParagraph/>}/>
               <Route exact path='/view_page/:pageid' element={<ViewPage/>}/>
               <Route exact path='/pick_images/:pageid' element={<PickImages/>}/>
+              <Route exact path='/not_found' element={<NotFound/>}/>
+              <Route exact path='/access_forbidden' element={<AccessForbidden/>}/>
+              <Route 
+                  path="*"
+                  element={<Navigate to="/not_found" replace={true} />}
+              />
           </Routes>
       </Router>
     </div>
