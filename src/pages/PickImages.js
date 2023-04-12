@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import ImageSelectionHelper from "../helpers/ImageSelectionHelper";
+import IDBasedImageSelectionHelper from "../helpers/IDBasedImageSelectionHelper"
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 axios.defaults.withCredentials = true;
@@ -8,7 +9,8 @@ axios.defaults.withCredentials = true;
 class PickImages extends React.Component {
     state = {
         pageid: 0,
-        sentences: []
+        sentences: [],
+        isLoading: true
     }
 
     componentDidMount() {
@@ -29,14 +31,17 @@ class PickImages extends React.Component {
     }
 
     render() {
+        if (this.state.isLoading) {
+            <div/>
+        }
         return (
             <div>
                 {
                     this.state.sentences
                         .map(sentence =>
                             <div className="set col-sm-12 col-md-6 offset-md-3">
-                            <ImageSelectionHelper 
-                                image_selection={sentence.child_image_selections}
+                            <IDBasedImageSelectionHelper 
+                                sentence_id={sentence.id}
                             />
                             </div>
                         )

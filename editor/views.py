@@ -14,7 +14,7 @@ from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer, GenerateImageSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer, GenerateImageSerializer, SentenceAndImageSelectionSerializer
 from gTTS.templatetags.gTTS import say
 import random
 import openai
@@ -171,13 +171,30 @@ class ViewSet(generics.RetrieveAPIView):
         # Return the set object
         return set
 
+class ViewSentence(generics.RetrieveAPIView):
+    """ Endpoint for returning data on a set specified by id """
+    permission_classes = [IsAuthenticated]
+    serializer_class = SentenceAndImageSelectionSerializer
+
+    def get_object(self):
+        sentence_id = self.kwargs.get('sentence_id')
+
+        # Check if set exists, else return exception
+        try:
+            sentence = Sentence.objects.get(pk=sentence_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            raise Http404
+        
+        # Return the set object
+        return sentence
+
 class ViewSetAndImages(generics.RetrieveAPIView):
     """ Endpoint for returning data on a set along with images specified by id, will generate images if none found """
     # Authentication is instead checked on return
     # permission_classes = [IsAuthenticated]
     serializer_class = SetAllChildrenSerializer
 
-    def get_object(self, request, *args, **kwargs):
+    def get_object(self):
         set_id = self.kwargs.get('set_id')
 
         # Check if set exists, else return exception
@@ -187,7 +204,7 @@ class ViewSetAndImages(generics.RetrieveAPIView):
             raise Http404
 
         # Ensure either set is public, or the requesting user owns the set:
-        if not set.public and not (request.user == set.created_by):
+        if not set.public and not (self.request.user == set.created_by):
             return Response(data={'message':'You do not have access to view this page'}, status=status.HTTP_403_FORBIDDEN)
 
         # Get all child sentences
@@ -207,7 +224,6 @@ class ViewSetAndImages(generics.RetrieveAPIView):
                     return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
         
         # Return the set object
-        print(set)
         return set
 
 class ToggleImageSelected(generics.UpdateAPIView):
@@ -228,7 +244,10 @@ class ToggleImageSelected(generics.UpdateAPIView):
         generated_image.selected = not generated_image.selected
         generated_image.save()
 
-        # Return serialised set
+        # Get parent set:
+        # parent_image_selection = ImageSelection.objects.get(pk=)
+        # Return the entire set:
+        # return_serializer = SetAllChildrenSerializer
         return_serializer = GenerateImageSerializer(generated_image)
         return Response(return_serializer.data, status=status.HTTP_200_OK)
 

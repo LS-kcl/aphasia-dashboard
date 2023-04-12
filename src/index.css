@@ -16,6 +16,12 @@ text-white {
   text-shadow: 1.5px 1.5px 1.5px black;
 }
 
+.selected-border {
+  border-style: solid;
+  border-radius: 3px;
+  border-color: #ffffff;
+}
+
 p, h1, h2, h3, h4, h5, h6 {
   color: #ffffff;
   text-shadow: 0.5px 0.5px 0.5px black;

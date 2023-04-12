@@ -6,6 +6,7 @@ import SetAdd from './pages/SetAdd';
 import WriteParagraph from './pages/WriteParagraph'
 import ViewPage from './pages/ViewPage';
 import PickImages from './pages/PickImages';
+import PickImagesModified from './pages/PickImagesModified';
 import Home from './pages/Home'; 
 import AccessForbidden from './pages/AccessForbidden';
 import NotFound from './pages/NotFound';
@@ -31,7 +32,7 @@ function App() {
               <Route exact path='/browse' element={<PageList/>}/>
               <Route exact path='/write_paragraph' element={<WriteParagraph/>}/>
               <Route exact path='/view_page/:pageid' element={<ViewPage/>}/>
-              <Route exact path='/pick_images/:pageid' element={<PickImages/>}/>
+              <Route exact path='/pick_images/:pageid' element={<PickImagesModified/>}/>
               <Route exact path='/not_found' element={<NotFound/>}/>
               <Route exact path='/access_forbidden' element={<AccessForbidden/>}/>
               <Route 
