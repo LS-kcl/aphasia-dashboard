@@ -20,7 +20,7 @@ class ViewPage extends React.Component {
         let { pageid } = this.props.params;
 
         // Make request for page based on pageid
-        axios.get('/api/view_set/' + pageid, {'withCredentials': true })
+        axios.get('/api/view_set_and_images/' + pageid, {'withCredentials': true })
             .then(res =>{
                 const responsejson = res.data;
                 this.setState({
@@ -66,12 +66,23 @@ class ViewPage extends React.Component {
                         this.state.sentences
                             .map(sentence =>
                                     <div className="set col-sm-12 col-md-6 offset-md-3">
-                                    <SentenceHelper 
-                                        parent_set={this.state.parentid}
-                                        text={sentence.text}
-                                        image_url={sentence.image_url}
-                                        sound_clip={sentence.sound_clip}
-                                    />
+                                        <div className="message">
+                                            <p>{sentence.text}</p>
+                                                <div className="row">
+                                                {
+                                                    sentence.child_image_selections ? sentence.child_image_selections.child_images?.map(data =>
+                                                        data.selected ?
+                                                        <div className="col"><img src={data.url}/></div> :
+                                                        null
+                                                    ) : null
+                                                }
+                                                </div>
+                                            <div>
+                                                <audio controls>
+                                                    <source src={sentence.sound_clip} type="audio/mp3"/>
+                                                </audio>
+                                            </div>
+                                        </div>
                                     </div>
                             )
                     }
