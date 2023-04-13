@@ -14,7 +14,7 @@ from django.db import transaction, IntegrityError
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist 
 from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
-from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer, GenerateImageSerializer, SentenceAndImageSelectionSerializer
+from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer, GenerateImageSerializer, SentenceAndImageSelectionSerializer, ImageSelectionSerializerIDOnly
 from gTTS.templatetags.gTTS import say
 import random
 import openai
@@ -327,18 +327,20 @@ class ToggleSetVisibility(generics.UpdateAPIView):
 class CreateImageSelection(generics.CreateAPIView):
     """ Endpoint for generating images """  
     permission_classes = [IsAuthenticated]
-    serializer_class = ImageSelectionSerializer
+    serializer_class = ImageSelectionSerializerIDOnly
 
     # Override create function to generate images
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Replace with kwarg passed in from URL
-        # Extract prompt and images requested from page
-        parent_sentence = serializer.validated_data.get('parent_sentence')
-        prompt = serializer.validated_data.get('prompt')
-        images_requested = serializer.validated_data.get('images_requested')
+        # Get image selection and parent sets
+        image_selection_id = kwargs.get('image_selection_id')
+        old_image_selection = ImageSelection.objects.get(pk=image_selection_id)
+        parent_sentence = old_image_selection.parent_sentence
+        prompt = old_image_selection.prompt
+
+        images_requested = 3
 
         # We do not acccept calls for more than 3 images
         if images_requested > 3:
@@ -352,6 +354,8 @@ class CreateImageSelection(generics.CreateAPIView):
         # Either all images are saved and set is created, or none are
         try:
             with transaction.atomic():
+                # Delete old image selection
+                old_image_selection.delete()
                 # Create a new ImageSelection object 
                 image_selection = create_image_selection(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
         except IntegrityError:
@@ -436,14 +440,31 @@ def generate_ai_image(prompt, number_to_generate):
     # Testing line
     # return ["https://picsum.photos/id/%s/300" %str(random.randint(0,300))]
 
-def create_image_selection(parent_sentence, prompt, images_requested):
+def query_unsplash_image(prompt, number_to_generate):
+    # Testing line
+    return [
+        "https://picsum.photos/id/%s/300" %str(random.randint(0,300)),
+        "https://picsum.photos/id/%s/300" %str(random.randint(0,300)),
+        "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
+    ]
+
+def create_image_selection(parent_sentence, prompt, images_requested, ai_image=True):
+    print("Entered create image selection")
     image_selection = ImageSelection.objects.create(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
     
-    # Generate number of images required and add to set
-    image_urls = generate_ai_image(prompt, images_requested)
-    print(image_urls)
+    if ai_image:
+        print("generating ai image")
+        # Generate number of images required and add to set
+        image_urls = generate_ai_image(prompt, images_requested)
+        print(image_urls)
 
-    for url in image_urls:
-        generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url["url"])
+        for url in image_urls:
+            generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url["url"])
+    else:
+        image_urls = generate_ai_image(prompt, images_requested)
+
+        for url in image_urls:
+            generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url)
+
 
     return image_selection

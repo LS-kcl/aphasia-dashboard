@@ -103,6 +103,11 @@ class ImageSelectionSerializer(serializers.ModelSerializer):
         # Return the serialized data
         return serializer.data
 
+class ImageSelectionSerializerIDOnly(serializers.ModelSerializer):
+    class Meta:
+        model=ImageSelection
+        fields=(['id'])
+
 class GenerateImageSerializer(serializers.ModelSerializer):
     class Meta:
         model=GeneratedImage

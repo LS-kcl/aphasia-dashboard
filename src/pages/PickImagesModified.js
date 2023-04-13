@@ -50,6 +50,30 @@ class PickImagesModified extends React.Component {
             })
     }
 
+    async GenerateNewImages(image_selection_id){
+        // Request to generate new images
+        await axios.post('/api/generate_prompts/' + image_selection_id).then(
+
+        )
+
+        // Refresh page
+        axios.get('/api/view_set_and_images/' + this.state.pageid)
+            .then(res =>{
+                const responsejson = res.data;
+                this.setState({
+                    pageid: responsejson.id, 
+                    sentences: responsejson.child_sentences 
+                })
+            })
+    }
+
+    ToggleGenerationType(image_selection_id){
+
+
+        // Regenerate using new image type
+        this.GenerateNewImages(image_selection_id)
+    }
+
     render() {
         return (
             <div>
@@ -71,8 +95,8 @@ class PickImagesModified extends React.Component {
                                     ) : null
                                 }
                                 </div>
-                                <button className="btn btn-light">Generate new images</button>
-                                <button className="btn btn-light">Switch to stock images</button>
+                                <button className="btn btn-light" onClick={e => this.GenerateNewImages(sentence.child_image_selections.id)}>Generate new images</button>
+                                <button className="btn btn-light" onClick={e => this.ToggleGenerationType(sentence.child_image_selections.id)}>Switch to stock images</button>
                             </div>
                         )
                 }
