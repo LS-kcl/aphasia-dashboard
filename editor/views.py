@@ -324,6 +324,28 @@ class ToggleSetVisibility(generics.UpdateAPIView):
         return_serializer = SetPlusSentencesSerializer(set)
         return Response(return_serializer.data, status=status.HTTP_200_OK)
 
+class ToggleImageSelectionType(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        image_selection_id = kwargs.get('image_selection_id')
+
+        # If set does not exist, do not update
+        try:
+            image_selection = ImageSelection.objects.get(pk=image_selection_id)
+        except ObjectDoesNotExist or MultipleObjectsReturned:
+            return Response(data={'message':'ImageSelection does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Else toggle generation type
+        print(image_selection.ai_generated)
+        image_selection.ai_generated = not image_selection.ai_generated
+        image_selection.save()
+        print(image_selection.ai_generated)
+
+        # Return serialised set
+        return_serializer = ImageSelectionSerializer(image_selection)
+        return Response(return_serializer.data, status=status.HTTP_200_OK)
+
 class CreateImageSelection(generics.CreateAPIView):
     """ Endpoint for generating images """  
     permission_classes = [IsAuthenticated]
@@ -339,6 +361,7 @@ class CreateImageSelection(generics.CreateAPIView):
         old_image_selection = ImageSelection.objects.get(pk=image_selection_id)
         parent_sentence = old_image_selection.parent_sentence
         prompt = old_image_selection.prompt
+        ai_generated = old_image_selection.ai_generated
 
         images_requested = 3
 
@@ -357,7 +380,7 @@ class CreateImageSelection(generics.CreateAPIView):
                 # Delete old image selection
                 old_image_selection.delete()
                 # Create a new ImageSelection object 
-                image_selection = create_image_selection(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
+                image_selection = create_image_selection(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested, ai_image=ai_generated)
         except IntegrityError:
             return Response(data="Could not create an ImageSelection", status=status.HTTP_403_FORBIDDEN)
 
@@ -450,7 +473,7 @@ def query_unsplash_image(prompt, number_to_generate):
 
 def create_image_selection(parent_sentence, prompt, images_requested, ai_image=True):
     print("Entered create image selection")
-    image_selection = ImageSelection.objects.create(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested)
+    image_selection = ImageSelection.objects.create(parent_sentence=parent_sentence, prompt=prompt, images_requested=images_requested, ai_generated=ai_image)
     
     if ai_image:
         print("generating ai image")
@@ -461,7 +484,7 @@ def create_image_selection(parent_sentence, prompt, images_requested, ai_image=T
         for url in image_urls:
             generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url["url"])
     else:
-        image_urls = generate_ai_image(prompt, images_requested)
+        image_urls = query_unsplash_image(prompt, images_requested)
 
         for url in image_urls:
             generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url)

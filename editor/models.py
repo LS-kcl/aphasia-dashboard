@@ -64,6 +64,8 @@ class ImageSelection(Model):
         validators=[MaxValueValidator(3), MinValueValidator(1)]
     )
 
+    ai_generated = models.BooleanField(default=True)
+
     parent_sentence = models.OneToOneField(Sentence, on_delete=models.CASCADE)
 
 

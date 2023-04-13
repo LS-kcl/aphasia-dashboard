@@ -67,10 +67,11 @@ class PickImagesModified extends React.Component {
             })
     }
 
-    ToggleGenerationType(image_selection_id){
+    async ToggleGenerationType(image_selection_id){
+        // Toggle visibiltity
+        await axios.put('/api/toggle_image_selection_type/' + image_selection_id, {'withCredentials': true })
 
-
-        // Regenerate using new image type
+        // Regenerate image selection using new image type
         this.GenerateNewImages(image_selection_id)
     }
 
@@ -96,7 +97,11 @@ class PickImagesModified extends React.Component {
                                 }
                                 </div>
                                 <button className="btn btn-light" onClick={e => this.GenerateNewImages(sentence.child_image_selections.id)}>Generate new images</button>
-                                <button className="btn btn-light" onClick={e => this.ToggleGenerationType(sentence.child_image_selections.id)}>Switch to stock images</button>
+                                {
+                                sentence.child_image_selections.ai_generated ?
+                                <button className="btn btn-light" onClick={e => this.ToggleGenerationType(sentence.child_image_selections.id)}>Switch to stock images</button> :
+                                <button className="btn btn-light" onClick={e => this.ToggleGenerationType(sentence.child_image_selections.id)}>Switch to AI generated images</button>
+                                }
                             </div>
                         )
                 }

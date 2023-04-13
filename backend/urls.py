@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from editor import views
-from editor.views import CreateParagraph, CreateSet, ListSets, DeleteSet, DeleteSentence, ViewSet, ViewSentence, CreateImageSelection, ToggleImageSelected, ViewSetAndImages, LogoutView, ToggleSetVisibility
+from editor.views import CreateParagraph, CreateSet, ListSets, DeleteSet, DeleteSentence, ViewSet, ViewSentence, CreateImageSelection, ToggleImageSelected, ViewSetAndImages, LogoutView, ToggleSetVisibility, ToggleImageSelectionType
 from rest_framework import generics
 from rest_framework_simplejwt import views as jwt_views
 
@@ -43,5 +43,6 @@ urlpatterns = [
     path('api/delete_set/<int:set_id>', DeleteSet.as_view(), name='api_delete_set'),
     path('api/delete_sentence/<int:sentence_id>', DeleteSentence.as_view(), name='api_delete_sentence'),
     path('api/toggle_image_selected/<int:generated_image_id>', ToggleImageSelected.as_view(), name='toggle_image_selected'),
-    path('api/generate_prompts/<int:image_selection_id>', CreateImageSelection.as_view(), name='create_image_selection')
+    path('api/generate_prompts/<int:image_selection_id>', CreateImageSelection.as_view(), name='create_image_selection'),
+    path('api/toggle_image_selection_type/<int:image_selection_id>', ToggleImageSelectionType.as_view(), name='toggle_image_selection_type')
 ]
