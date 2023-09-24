@@ -28,6 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(find_dotenv())
 
 OPENAI_SECRET_KEY = os.environ['OPENAI_SECRET_KEY']
+UNSPLASH_ACCESS_KEY  = os.environ['UNSPLASH_ACCESS_KEY']
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # Setting openAI secret key

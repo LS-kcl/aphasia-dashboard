@@ -4,7 +4,8 @@
         "pk": 1,
         "fields": {
             "title": "My First Set",
-            "text": "Sample Text"
+            "text": "Sample Text",
+            "created_by": 1
         }
     },
     {
@@ -12,7 +13,8 @@
         "pk": 2,
         "fields": {
             "title": "Another Set",
-            "text": "Sample Text"
+            "text": "Sample Text",
+            "created_by": 2
         }
     }
 ]

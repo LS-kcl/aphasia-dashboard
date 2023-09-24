@@ -7,6 +7,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
+import requests
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.contrib import messages
@@ -16,6 +17,7 @@ from .forms import ParagraphForm, SentenceForm
 from .models import Paragraph, Sentence, Set, GeneratedImage, ImageSelection
 from .serializers import ParagraphSerializer, SetPlusSentencesSerializer, SetSerializer, ImageSelectionSerializer, SentenceImageURLOnlySerializer, SetAllChildrenSerializer, GenerateImageSerializer, SentenceAndImageSelectionSerializer, ImageSelectionSerializerIDOnly
 from gTTS.templatetags.gTTS import say
+from backend.settings import UNSPLASH_ACCESS_KEY
 import random
 import openai
 
@@ -464,12 +466,24 @@ def generate_ai_image(prompt, number_to_generate):
     # return ["https://picsum.photos/id/%s/300" %str(random.randint(0,300))]
 
 def query_unsplash_image(prompt, number_to_generate):
+    # Create query string to append to url
+    query_string = "?query=" + prompt.replace(" ", "+") + "&per_page=" + str(number_to_generate)
+    url = "https://api.unsplash.com/search/photos" + query_string
+    header = {
+        "Content-Type":"application/json",
+        "Authorization":"Client-ID " + UNSPLASH_ACCESS_KEY,
+    }
+    
+    response = requests.get(url,headers=header)
+    response_json = response.json()
+    return response_json["results"]
+
     # Testing line
-    return [
-        "https://picsum.photos/id/%s/300" %str(random.randint(0,300)),
-        "https://picsum.photos/id/%s/300" %str(random.randint(0,300)),
-        "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
-    ]
+    # return [
+    #     "https://picsum.photos/id/%s/300" %str(random.randint(0,300)),
+    #     "https://picsum.photos/id/%s/300" %str(random.randint(0,300)),
+    #     "https://picsum.photos/id/%s/300" %str(random.randint(0,300))
+    # ]
 
 def create_image_selection(parent_sentence, prompt, images_requested, ai_image=True):
     print("Entered create image selection")
@@ -487,7 +501,8 @@ def create_image_selection(parent_sentence, prompt, images_requested, ai_image=T
         image_urls = query_unsplash_image(prompt, images_requested)
 
         for url in image_urls:
-            generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=url)
+            urls_dictionary = url["urls"]
+            generated_image = GeneratedImage.objects.create(parent_selection=image_selection, url=urls_dictionary["raw"])
 
 
     return image_selection
